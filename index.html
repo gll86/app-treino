@@ -111,12 +111,16 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 
 .footer-note{text-align:center;color:var(--muted);font-size:0.68rem;margin-top:24px;padding:0 14px}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 </head>
 <body>
 <header>
   <div>💪</div>
   <h1>MEU TREINO</h1>
   <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
+  <button class="hdr-btn" id="auth-btn" onclick="handleAuth()">☁ Entrar</button>
   <span id="today-date">QUA., 27/05</span>
 </header>
 <div id="edit-banner">
@@ -1000,8 +1004,56 @@ const TREINOS_DATA = {"A":{"label":"TREINO A — Peito + Tríceps","grupos":[{"n
 
 const STORAGE_KEY='treinos_saved';
 function loadTreinos(){const s=localStorage.getItem(STORAGE_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(TREINOS_DATA));}
-function saveToStorage(){localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));}
+function saveToStorage(){localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));saveToCloud();}
 let treinos = loadTreinos();
+
+// ── FIREBASE ──────────────────────────────────────────────────────────
+firebase.initializeApp({
+  apiKey:"AIzaSyDoFhIsI-LeN4tZkTkHwI_KfgwO_8j5GoA",
+  authDomain:"app-treino-ef6cd.firebaseapp.com",
+  databaseURL:"https://app-treino-ef6cd-default-rtdb.firebaseio.com",
+  projectId:"app-treino-ef6cd",
+  storageBucket:"app-treino-ef6cd.firebasestorage.app",
+  messagingSenderId:"971766458851",
+  appId:"1:971766458851:web:3d87ee9183d6c1093e98d6"
+});
+const auth=firebase.auth();
+const db=firebase.database();
+let currentUser=null;
+
+function handleAuth(){
+  if(currentUser)auth.signOut();
+  else auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+}
+
+function updateAuthUI(){
+  const btn=document.getElementById('auth-btn');if(!btn)return;
+  if(currentUser){
+    const name=currentUser.displayName?currentUser.displayName.split(' ')[0]:'Usuário';
+    btn.textContent='☁ '+name;btn.title='Clique para sair';btn.classList.add('active');
+  } else {
+    btn.textContent='☁ Entrar';btn.title='';btn.classList.remove('active');
+  }
+}
+
+function saveToCloud(){
+  if(!currentUser)return;
+  const btn=document.getElementById('auth-btn');const prev=btn?btn.textContent:'';
+  if(btn)btn.textContent='⏳';
+  db.ref(`users/${currentUser.uid}/treinos`).set(treinos)
+    .then(()=>{if(btn)btn.textContent=prev;})
+    .catch(()=>{if(btn)btn.textContent='⚠ sync';});
+}
+
+function loadFromFirebase(){
+  const btn=document.getElementById('auth-btn');if(btn)btn.textContent='⏳';
+  db.ref(`users/${currentUser.uid}/treinos`).once('value').then(snap=>{
+    const data=snap.val();
+    if(data){treinos=data;localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));buildAll();}
+    else saveToCloud();
+    updateAuthUI();
+  }).catch(()=>{if(btn)btn.textContent='⚠ offline';});
+}
 let editMode=false, currentTab='A';
 
 // ── DONE STATE ────────────────────────────────────────────────────────
@@ -1204,6 +1256,7 @@ function switchTab(key){
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
 document.getElementById('today-date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'}).toUpperCase();
 buildAll();
+auth.onAuthStateChanged(user=>{currentUser=user;updateAuthUI();if(user)loadFromFirebase();});
 </script>
 
 </body></html>
