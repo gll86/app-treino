@@ -2,6 +2,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Treino</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8f135">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Meu Treino">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap');
 :root{
@@ -1257,6 +1263,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 document.getElementById('today-date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'}).toUpperCase();
 buildAll();
 auth.onAuthStateChanged(user=>{currentUser=user;updateAuthUI();if(user)loadFromFirebase();});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 
 </body></html>
