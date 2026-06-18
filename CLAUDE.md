@@ -58,11 +58,19 @@ Progresso "feito hoje" é salvo no `localStorage` com chave `done_{treino}_{data
   (é a única forma de persistência fora do localStorage hoje).
 - Não comitar nenhuma API key real no código ou no histórico do git.
 
-## Comandos
-Não há build/test automatizado — é um único arquivo HTML aberto direto no navegador.
+## Pipeline de desenvolvimento
+Todo change segue esta ordem obrigatória:
+1. **Editar** `index.html`
+2. **Validar** — `powershell -ExecutionPolicy Bypass -File validate.ps1`
+   - Se a contagem de exercícios mudou intencionalmente: rodar com `-Update` primeiro
+   - Só prosseguir se todos os checks passarem
+3. **Commitar** — propor commit ao usuário
+4. **Push** — só após aprovação do usuário
+5. **Atualizar documentação** — se a mudança afetou funcionalidade, atualizar
+   `README.md` e este `CLAUDE.md`, commitar e pushar
 
+## Comandos
 Para visualizar mudanças localmente: abrir `index.html` no navegador (ou usar a
 extensão "Live Server" / similar para auto-reload).
 
-Para publicar no celular: `git add index.html && git commit -m "..." && git push`
-O GitHub Pages atualiza em ~1 minuto. URL do app: https://gll86.github.io/app-treino
+URL do app: https://gll86.github.io/app-treino
