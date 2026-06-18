@@ -115,7 +115,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .congrats p{color:var(--muted);font-size:0.84rem}
 @keyframes popIn{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
 
-.footer-note{text-align:center;color:var(--muted);font-size:0.68rem;margin-top:24px;padding:0 14px}
+
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -1003,7 +1003,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
     <div class="congrats " id="congrats-D">
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div></div>
-<p class="footer-note" id="footer-note">Toque no exercício para expandir · ✓ para marcar direto</p>
 
 <script>
 const TREINOS_DATA = {"A":{"label":"TREINO A — Peito + Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Supino reto","series":4,"reps":12},{"nome":"Crucifixo inclinado","series":3,"reps":12},{"nome":"Supino halter inclinado","series":3,"reps":10},{"nome":"Cross over no cabo","series":3,"reps":15}]},{"nome":"Tríceps","exercicios":[{"nome":"Extensão corda no cabo","series":4,"reps":12},{"nome":"Skullcrusher barra W no cabo","series":3,"reps":12}]}]},"B":{"label":"TREINO B — Costas + Bíceps","grupos":[{"nome":"Costas","exercicios":[{"nome":"Leg raise banco inclinado","series":3,"reps":15},{"nome":"Puxada aberta supinada","series":4,"reps":10},{"nome":"Remada inclinada supinada","series":4,"reps":10},{"nome":"Remada unilateral","series":3,"reps":12},{"nome":"Pullover no cabo","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Preacher na máquina","series":4,"reps":10},{"nome":"Rosca martelo","series":3,"reps":12}]}]},"C":{"label":"TREINO C — Quadríceps + Panturrilha","grupos":[{"nome":"Quadríceps","exercicios":[{"nome":"Extensão na cadeira","series":4,"reps":12},{"nome":"Agachamento","series":4,"reps":10},{"nome":"Avanço (Lunge)","series":3,"reps":12},{"nome":"Extensão unilateral","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Panturrilha de pé","series":4,"reps":15},{"nome":"Panturrilha sentado","series":3,"reps":15}]}]},"D":{"label":"TREINO D — Ombro + Peito","grupos":[{"nome":"Ombro","exercicios":[{"nome":"Cable rear delt flyes","series":3,"reps":15},{"nome":"Elevação lateral no banco","series":4,"reps":12},{"nome":"Shoulder press","series":4,"reps":10},{"nome":"Elevação lateral na máquina","series":3,"reps":12},{"nome":"Elevação frontal no cabo","series":3,"reps":12},{"nome":"Bent over dumbell rear delt","series":3,"reps":15}]},{"nome":"PEITO","exercicios":[{"nome":"Supino inclinado","series":4,"reps":10},{"nome":"Dip","series":3,"reps":12}]},{"nome":"Ombro","exercicios":[{"nome":"Encolhimento","series":4,"reps":12}]}]},"E":{"label":"TREINO E — Posterior + Costas","grupos":[{"nome":"Posterior de coxa","exercicios":[{"nome":"Hiperextensão","series":3,"reps":12},{"nome":"Lying leg curl","series":4,"reps":10},{"nome":"Hip raises","series":3,"reps":15},{"nome":"Single leg hamstring curl","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Extensão de panturrilha na máquina","series":4,"reps":15}]},{"nome":"Costas","exercicios":[{"nome":"Puxada aberta","series":4,"reps":10},{"nome":"Remada apoiada inclinada","series":4,"reps":10}]}]},"F":{"label":"TREINO F — Braços","grupos":[{"nome":"Tríceps","exercicios":[{"nome":"Extensão corda no cabo","series":4,"reps":12},{"nome":"Skullcrusher no cabo","series":3,"reps":12},{"nome":"Halter acima da cabeça","series":3,"reps":12},{"nome":"Invertido unilateral no cabo","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Barra W","series":4,"reps":10},{"nome":"Rosca halter unilateral no banco","series":3,"reps":12},{"nome":"Rosca martelo no cabo","series":3,"reps":12},{"nome":"Rosca invertida","series":3,"reps":12}]}]}};
@@ -1212,8 +1211,7 @@ function toggleEditMode(){
   if(!editMode)saveToStorage();
   const btn=document.getElementById('edit-toggle'),banner=document.getElementById('edit-banner');
   btn.textContent=editMode?'✅ Salvar alterações':'✏️ Editar';btn.classList.toggle('active',editMode);banner.classList.toggle('show',editMode);
-  document.getElementById('footer-note').textContent=editMode?'Modo edição — defina séries×reps, renomeie e reordene.':'Toque no exercício para expandir · ✓ para marcar direto';
-  document.querySelectorAll('.treino-panel').forEach(p=>p.classList.toggle('edit-mode',editMode));
+document.querySelectorAll('.treino-panel').forEach(p=>p.classList.toggle('edit-mode',editMode));
 }
 
 // ── DRAG & DROP ───────────────────────────────────────────────────────
