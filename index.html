@@ -36,18 +36,17 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .treino-panel.active{display:block}
 
 .treino-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
-.treino-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px}
-.treino-title-input{font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;background:var(--card2);border:1px solid var(--edit-border);border-radius:8px;color:var(--text);padding:5px 10px;display:none;outline:none;width:210px}
+.treino-label{font-size:0.88rem;font-weight:600;flex:1;min-width:0}
+.edit-mode .treino-panel .treino-label{display:none}
+.treino-title-input{font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;background:var(--card2);border:1px solid var(--edit-border);border-radius:8px;color:var(--text);padding:5px 10px;display:none;outline:none;flex:1}
 .treino-title-input:focus{border-color:var(--accent)}
 .edit-mode .treino-title-input{display:block}
-.edit-mode .treino-subtitle{display:none}
 .header-btns{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 .progress-pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:0.76rem;color:var(--accent);font-weight:700}
 .reset-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:4px 9px;font-size:0.72rem;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
 .reset-btn:hover{border-color:var(--red);color:var(--red)}
 .progress-bar-wrap{background:var(--border);border-radius:4px;height:4px;margin-bottom:12px;overflow:hidden}
 .progress-bar-fill{height:4px;background:var(--accent);border-radius:4px;transition:width .4s ease}
-.treino-subtitle{font-size:0.74rem;color:var(--muted);margin-bottom:12px}
 
 .group-block{margin-bottom:4px}
 .group-header{display:flex;align-items:center;gap:6px;margin:14px 0 7px;flex-wrap:wrap}
@@ -74,6 +73,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .exercise-item.done .ex-num{color:var(--accent)}
 .edit-mode .exercise-item .ex-num{display:none}
 .ex-info{flex:1;min-width:0}
+.edit-mode .exercise-item .ex-info{display:none}
 .ex-name{font-size:0.9rem;font-weight:600}
 .exercise-item.done .ex-name{color:var(--done-text)}
 .ex-sets-badge{font-size:0.7rem;color:var(--muted);margin-top:1px}
@@ -83,10 +83,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .edit-mode .exercise-item .ex-edit-input{display:block}
 .sets-edit-wrap{display:none;align-items:center;gap:4px;flex-shrink:0}
 .edit-mode .exercise-item .sets-edit-wrap{display:flex}
-.sets-n-input,.reps-n-input{width:38px;background:var(--card3);border:1px solid var(--edit-border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:3px 5px;text-align:center;outline:none}
+.sets-n-input{width:38px;background:var(--card3);border:1px solid var(--edit-border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:3px 5px;text-align:center;outline:none}
 .del-ex-btn{display:none;background:none;border:none;color:var(--red);font-size:1.2rem;cursor:pointer;flex-shrink:0;line-height:1}
 .edit-mode .exercise-item .del-ex-btn{display:block}
-.sets-x{font-size:0.7rem;color:var(--muted)}
 .check-circle{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.78rem;transition:all .18s;cursor:pointer}
 .check-circle:hover{border-color:var(--accent)}
 .exercise-item.done .check-circle{background:var(--accent);border-color:var(--accent);color:#111}
@@ -129,17 +128,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 <div class="tabs" id="tabs"><button class="tab-btn" id="tab-A" data-key="A">TREINO A</button><button class="tab-btn" id="tab-B" data-key="B">TREINO B</button><button class="tab-btn" id="tab-C" data-key="C">TREINO C</button><button class="tab-btn active" id="tab-D" data-key="D">TREINO D</button><button class="tab-btn" id="tab-E" data-key="E">TREINO E</button><button class="tab-btn" id="tab-F" data-key="F">TREINO F</button></div>
 <div id="panels"><div class="treino-panel edit-mode" id="panel-A">
     <div class="treino-header">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="treino-title">TREINO A</div>
-        <input class="treino-title-input" value="TREINO A — Peito + Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-subtitle').textContent=this.value">
-      </div>
+      <div class="treino-label">TREINO A — Peito + Tríceps</div>
+        <input class="treino-title-input" value="TREINO A — Peito + Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-label').textContent=this.value">
       <div class="header-btns">
         <div class="progress-pill" id="pill-A">0/6</div>
         <button class="reset-btn" onclick="resetTreino('A')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-A" style="width:0%"></div></div>
-    <div class="treino-subtitle">TREINO A — Peito + Tríceps</div>
     <div id="groups-A"><div class="group-block" data-gi="0">
       <div class="group-header">
         <span class="section-label">— Peito</span>
@@ -157,8 +153,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Supino reto" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['A'].grupos[0].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('A',0,0)">×</button>
@@ -174,8 +168,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Crucifixo inclinado" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['A'].grupos[0].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('A',0,1)">×</button>
@@ -191,8 +183,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Supino halter inclinado" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['A'].grupos[0].exercicios[2].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('A',0,2)">×</button>
@@ -208,8 +198,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Cross over no cabo" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[3].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[0].exercicios[3].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['A'].grupos[0].exercicios[3].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('A',0,3)">×</button>
@@ -235,8 +223,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Extensão corda no cabo" placeholder="Nome..." oninput="treinos['A'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['A'].grupos[1].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('A',1,0)">×</button>
@@ -252,8 +238,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Skullcrusher barra W no cabo" placeholder="Nome..." oninput="treinos['A'].grupos[1].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['A'].grupos[1].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('A',1,1)">×</button>
@@ -268,17 +252,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-B">
     <div class="treino-header">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="treino-title">TREINO B</div>
-        <input class="treino-title-input" value="TREINO B — Costas + Bíceps" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-subtitle').textContent=this.value">
-      </div>
+      <div class="treino-label">TREINO B — Costas + Bíceps</div>
+        <input class="treino-title-input" value="TREINO B — Costas + Bíceps" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-label').textContent=this.value">
       <div class="header-btns">
         <div class="progress-pill" id="pill-B">0/7</div>
         <button class="reset-btn" onclick="resetTreino('B')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-B" style="width:0%"></div></div>
-    <div class="treino-subtitle">TREINO B — Costas + Bíceps</div>
     <div id="groups-B"><div class="group-block" data-gi="0">
       <div class="group-header">
         <span class="section-label">— Costas</span>
@@ -296,8 +277,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Leg raise banco inclinado" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['B'].grupos[0].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('B',0,0)">×</button>
@@ -313,8 +292,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Puxada aberta supinada" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['B'].grupos[0].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('B',0,1)">×</button>
@@ -330,8 +307,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Remada inclinada supinada" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['B'].grupos[0].exercicios[2].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('B',0,2)">×</button>
@@ -347,8 +322,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Remada unilateral" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[3].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[0].exercicios[3].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['B'].grupos[0].exercicios[3].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('B',0,3)">×</button>
@@ -364,8 +337,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Pullover no cabo" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[4].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[0].exercicios[4].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['B'].grupos[0].exercicios[4].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('B',0,4)">×</button>
@@ -391,8 +362,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Preacher na máquina" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['B'].grupos[1].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('B',1,0)">×</button>
@@ -408,8 +377,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Rosca martelo" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['B'].grupos[1].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('B',1,1)">×</button>
@@ -424,17 +391,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-C">
     <div class="treino-header">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="treino-title">TREINO C</div>
-        <input class="treino-title-input" value="TREINO C — Quadríceps + Panturrilha" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-subtitle').textContent=this.value">
-      </div>
+      <div class="treino-label">TREINO C — Quadríceps + Panturrilha</div>
+        <input class="treino-title-input" value="TREINO C — Quadríceps + Panturrilha" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-label').textContent=this.value">
       <div class="header-btns">
         <div class="progress-pill" id="pill-C">0/6</div>
         <button class="reset-btn" onclick="resetTreino('C')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-C" style="width:0%"></div></div>
-    <div class="treino-subtitle">TREINO C — Quadríceps + Panturrilha</div>
     <div id="groups-C"><div class="group-block" data-gi="0">
       <div class="group-header">
         <span class="section-label">— Quadríceps</span>
@@ -452,8 +416,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Extensão na cadeira" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['C'].grupos[0].exercicios[0].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('C',0,0)">×</button>
@@ -469,8 +431,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Agachamento" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['C'].grupos[0].exercicios[1].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('C',0,1)">×</button>
@@ -486,8 +446,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Avanço (Lunge)" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['C'].grupos[0].exercicios[2].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('C',0,2)">×</button>
@@ -503,8 +461,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Extensão unilateral" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[3].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[0].exercicios[3].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['C'].grupos[0].exercicios[3].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('C',0,3)">×</button>
@@ -530,8 +486,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Panturrilha de pé" placeholder="Nome..." oninput="treinos['C'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['C'].grupos[1].exercicios[0].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('C',1,0)">×</button>
@@ -547,8 +501,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Panturrilha sentado" placeholder="Nome..." oninput="treinos['C'].grupos[1].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['C'].grupos[1].exercicios[1].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('C',1,1)">×</button>
@@ -563,17 +515,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-E">
     <div class="treino-header">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="treino-title">TREINO E</div>
-        <input class="treino-title-input" value="TREINO E — Posterior + Costas" placeholder="Nome..." oninput="treinos['E'].label=this.value;document.querySelector('#panel-E .treino-subtitle').textContent=this.value">
-      </div>
+      <div class="treino-label">TREINO E — Posterior + Costas</div>
+        <input class="treino-title-input" value="TREINO E — Posterior + Costas" placeholder="Nome..." oninput="treinos['E'].label=this.value;document.querySelector('#panel-E .treino-label').textContent=this.value">
       <div class="header-btns">
         <div class="progress-pill" id="pill-E">0/7</div>
         <button class="reset-btn" onclick="resetTreino('E')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-E" style="width:0%"></div></div>
-    <div class="treino-subtitle">TREINO E — Posterior + Costas</div>
     <div id="groups-E"><div class="group-block" data-gi="0">
       <div class="group-header">
         <span class="section-label">— Posterior de coxa</span>
@@ -591,8 +540,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Hiperextensão" placeholder="Nome..." oninput="treinos['E'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['E'].grupos[0].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('E',0,0)">×</button>
@@ -608,8 +555,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Lying leg curl" placeholder="Nome..." oninput="treinos['E'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['E'].grupos[0].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('E',0,1)">×</button>
@@ -625,8 +570,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Hip raises" placeholder="Nome..." oninput="treinos['E'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['E'].grupos[0].exercicios[2].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('E',0,2)">×</button>
@@ -642,8 +585,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Single leg hamstring curl" placeholder="Nome..." oninput="treinos['E'].grupos[0].exercicios[3].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[0].exercicios[3].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['E'].grupos[0].exercicios[3].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('E',0,3)">×</button>
@@ -669,8 +610,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Extensão de panturrilha na máquina" placeholder="Nome..." oninput="treinos['E'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['E'].grupos[1].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('E',1,0)">×</button>
@@ -696,8 +635,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Puxada aberta" placeholder="Nome..." oninput="treinos['E'].grupos[2].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['E'].grupos[2].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('E',2,0)">×</button>
@@ -713,8 +650,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Remada apoiada inclinada" placeholder="Nome..." oninput="treinos['E'].grupos[2].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[2].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['E'].grupos[2].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('E',2,1)">×</button>
@@ -729,17 +664,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-F">
     <div class="treino-header">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="treino-title">TREINO F</div>
-        <input class="treino-title-input" value="TREINO F — Braços" placeholder="Nome..." oninput="treinos['F'].label=this.value;document.querySelector('#panel-F .treino-subtitle').textContent=this.value">
-      </div>
+      <div class="treino-label">TREINO F — Braços</div>
+        <input class="treino-title-input" value="TREINO F — Braços" placeholder="Nome..." oninput="treinos['F'].label=this.value;document.querySelector('#panel-F .treino-label').textContent=this.value">
       <div class="header-btns">
         <div class="progress-pill" id="pill-F">0/8</div>
         <button class="reset-btn" onclick="resetTreino('F')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-F" style="width:0%"></div></div>
-    <div class="treino-subtitle">TREINO F — Braços</div>
     <div id="groups-F"><div class="group-block" data-gi="0">
       <div class="group-header">
         <span class="section-label">— Tríceps</span>
@@ -757,8 +689,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Extensão corda no cabo" placeholder="Nome..." oninput="treinos['F'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['F'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['F'].grupos[0].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',0,0)">×</button>
@@ -774,8 +704,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Skullcrusher no cabo" placeholder="Nome..." oninput="treinos['F'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['F'].grupos[0].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',0,1)">×</button>
@@ -791,8 +719,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Halter acima da cabeça" placeholder="Nome..." oninput="treinos['F'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['F'].grupos[0].exercicios[2].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',0,2)">×</button>
@@ -808,8 +734,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Invertido unilateral no cabo" placeholder="Nome..." oninput="treinos['F'].grupos[0].exercicios[3].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[0].exercicios[3].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['F'].grupos[0].exercicios[3].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',0,3)">×</button>
@@ -835,8 +759,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Barra W" placeholder="Nome..." oninput="treinos['F'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['F'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['F'].grupos[1].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',1,0)">×</button>
@@ -852,8 +774,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Rosca halter unilateral no banco" placeholder="Nome..." oninput="treinos['F'].grupos[1].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['F'].grupos[1].exercicios[1].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',1,1)">×</button>
@@ -869,8 +789,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Rosca martelo no cabo" placeholder="Nome..." oninput="treinos['F'].grupos[1].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[1].exercicios[2].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['F'].grupos[1].exercicios[2].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',1,2)">×</button>
@@ -886,8 +804,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Rosca invertida" placeholder="Nome..." oninput="treinos['F'].grupos[1].exercicios[3].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[1].exercicios[3].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['F'].grupos[1].exercicios[3].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('F',1,3)">×</button>
@@ -902,17 +818,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode active" id="panel-D">
     <div class="treino-header">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="treino-title">TREINO D</div>
-        <input class="treino-title-input" value="TREINO D — Ombro + Peito" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-subtitle').textContent=this.value">
-      </div>
+      <div class="treino-label">TREINO D — Ombro + Peito</div>
+        <input class="treino-title-input" value="TREINO D — Ombro + Peito" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-label').textContent=this.value">
       <div class="header-btns">
         <div class="progress-pill" id="pill-D">8/9</div>
         <button class="reset-btn" onclick="resetTreino('D')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-D" style="width:89%"></div></div>
-    <div class="treino-subtitle">TREINO D — Ombro + Peito</div>
     <div id="groups-D"><div class="group-block" data-gi="0">
       <div class="group-header">
         <span class="section-label">— Ombro</span>
@@ -930,8 +843,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Cable rear delt flyes" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['D'].grupos[0].exercicios[0].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',0,0)">×</button>
@@ -947,8 +858,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Elevação lateral no banco" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['D'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['D'].grupos[0].exercicios[1].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',0,1)">×</button>
@@ -964,8 +873,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Shoulder press" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['D'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['D'].grupos[0].exercicios[2].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',0,2)">×</button>
@@ -981,8 +888,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Elevação lateral na máquina" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[3].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[0].exercicios[3].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['D'].grupos[0].exercicios[3].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',0,3)">×</button>
@@ -998,8 +903,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Elevação frontal no cabo" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[4].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[0].exercicios[4].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['D'].grupos[0].exercicios[4].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',0,4)">×</button>
@@ -1015,8 +918,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Bent over dumbell rear delt" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[5].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[0].exercicios[5].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="15" oninput="treinos['D'].grupos[0].exercicios[5].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',0,5)">×</button>
@@ -1042,8 +943,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Supino inclinado" placeholder="Nome..." oninput="treinos['D'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['D'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="10" oninput="treinos['D'].grupos[1].exercicios[0].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',1,0)">×</button>
@@ -1059,8 +958,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Dip" placeholder="Nome..." oninput="treinos['D'].grupos[1].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['D'].grupos[1].exercicios[1].reps=parseInt(this.value)||12">
       </div>
 
       <button class="del-ex-btn" onclick="deleteEx('D',1,1)">×</button>
@@ -1086,8 +983,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <input class="ex-edit-input" value="Encolhimento" placeholder="Nome..." oninput="treinos['D'].grupos[2].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="12" oninput="treinos['D'].grupos[2].exercicios[0].reps=parseInt(this.value)||12">
       </div>
       
       <button class="del-ex-btn" onclick="deleteEx('D',2,0)">×</button>
@@ -1137,18 +1032,15 @@ function buildPanel(key){
   panel.className='treino-panel'+(editMode?' edit-mode':'');panel.id=`panel-${key}`;
   panel.innerHTML=`
     <div class="treino-header">
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <div class="treino-title">TREINO ${key}</div>
-        <input class="treino-title-input" value="${esc(data.label)}" placeholder="Nome..."
-          oninput="treinos['${key}'].label=this.value;document.querySelector('#panel-${key} .treino-subtitle').textContent=this.value">
-      </div>
+      <div class="treino-label">${esc(data.label)}</div>
+      <input class="treino-title-input" value="${esc(data.label)}" placeholder="Nome..."
+        oninput="treinos['${key}'].label=this.value;document.querySelector('#panel-${key} .treino-label').textContent=this.value">
       <div class="header-btns">
         <div class="progress-pill" id="pill-${key}">${dc}/${total}</div>
         <button class="reset-btn" onclick="resetTreino('${key}')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-${key}" style="width:${total?Math.round(dc/total*100):0}%"></div></div>
-    <div class="treino-subtitle">${esc(data.label)}</div>
     <div id="groups-${key}"></div>
     <div class="add-group-row"><button class="add-group-btn" onclick="addGroup('${key}')">+ Adicionar grupo muscular</button></div>
     <div class="congrats ${dc===total&&total>0?'show':''}" id="congrats-${key}">
@@ -1201,9 +1093,6 @@ function makeExItem(key,gi,ei,idx,ex,isDone){
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="${sn}"
           oninput="treinos['${key}'].grupos[${gi}].exercicios[${ei}].series=parseInt(this.value)||3">
-        <span class="sets-x">×</span>
-        <input class="reps-n-input" type="number" min="1" max="50" value="${rn}"
-          oninput="treinos['${key}'].grupos[${gi}].exercicios[${ei}].reps=parseInt(this.value)||12">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('${key}',${gi},${ei})">×</button>
       <div class="check-circle" title="Marcar como concluído">${isDone?'✓':''}</div>
