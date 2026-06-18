@@ -10,17 +10,25 @@ App pessoal para acompanhamento de treinos de musculação. Roda 100% no navegad
 
 Um app de academia que cabe num único arquivo HTML. Você abre no celular, marca os exercícios concluídos, e o progresso fica salvo localmente. Edições nos treinos sincronizam entre dispositivos via Firebase quando você está logado com o Google.
 
+É um **PWA (Progressive Web App)**: pode ser instalado direto do browser e abre em tela cheia como um app nativo, sem barra de endereço.
+
+**Para instalar:**
+- **Android (Chrome):** abre a URL → menu ⋮ → "Adicionar à tela inicial"
+- **iPhone (Safari):** abre a URL → compartilhar → "Adicionar à Tela de Início"
+
 ---
 
 ## Como funciona
 
-### Stack intencional: zero dependências
+### Stack intencional: zero dependências de build
 
 O app é um único arquivo `index.html` com HTML, CSS e JavaScript embutidos. Sem React, sem Vue, sem bundler, sem `npm install`. Essa foi uma escolha deliberada:
 
 - **Portabilidade total** — o arquivo funciona aberto direto no browser, sem servidor local
-- **Sem ponto de falha externo** — não depende de CDN, de API, de nada que possa sair do ar
 - **Simples de entender** — qualquer pessoa que sabe HTML/CSS/JS consegue ler e modificar
+- **Deploy trivial** — um `git push` publica uma nova versão via GitHub Pages
+
+As únicas dependências externas são carregadas via CDN: Google Fonts e o Firebase SDK (Authentication + Realtime Database).
 
 ### Persistência e sync entre dispositivos
 
@@ -180,6 +188,10 @@ index.html
 | Arquivo | Descrição |
 |---|---|
 | `index.html` | O app completo |
+| `manifest.json` | Manifesto PWA (nome, ícones, cor de tema, modo standalone) |
+| `sw.js` | Service worker — cache offline e atualização em background |
+| `icon-192.png` | Ícone PWA 192×192 |
+| `icon-512.png` | Ícone PWA 512×512 |
 | `validate.ps1` | Script PowerShell de validação estrutural do HTML |
 | `validate.snapshot.json` | Snapshot da contagem esperada de exercícios |
 | `CLAUDE.md` | Instruções e contexto para o assistente de IA (Claude Code) |
