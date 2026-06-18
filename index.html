@@ -23,8 +23,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 #edit-banner{display:none;background:var(--edit-bg);border-bottom:1px solid var(--edit-border);padding:8px 14px;gap:8px;align-items:center;flex-wrap:wrap}
 #edit-banner.show{display:flex}
 #edit-banner span{font-size:0.73rem;color:var(--accent);flex:1}
-#download-btn{background:var(--accent);border:none;border-radius:8px;color:#111;padding:6px 14px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
-#download-btn:hover{background:var(--accent2)}
 
 .tabs{display:flex;overflow-x:auto;gap:5px;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--border);scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
@@ -123,7 +121,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 </header>
 <div id="edit-banner">
   <span>✏️ Arraste ⠿ · edite nomes · defina séries×reps · × remove</span>
-  <button id="download-btn" onclick="downloadFile()">⬇️ Salvar arquivo</button>
 </div>
 <div class="tabs" id="tabs"><button class="tab-btn" id="tab-A" data-key="A">TREINO A</button><button class="tab-btn" id="tab-B" data-key="B">TREINO B</button><button class="tab-btn" id="tab-C" data-key="C">TREINO C</button><button class="tab-btn active" id="tab-D" data-key="D">TREINO D</button><button class="tab-btn" id="tab-E" data-key="E">TREINO E</button><button class="tab-btn" id="tab-F" data-key="F">TREINO F</button></div>
 <div id="panels"><div class="treino-panel edit-mode" id="panel-A">
@@ -1001,7 +998,10 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 <script>
 const TREINOS_DATA = {"A":{"label":"TREINO A — Peito + Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Supino reto","series":4,"reps":12},{"nome":"Crucifixo inclinado","series":3,"reps":12},{"nome":"Supino halter inclinado","series":3,"reps":10},{"nome":"Cross over no cabo","series":3,"reps":15}]},{"nome":"Tríceps","exercicios":[{"nome":"Extensão corda no cabo","series":4,"reps":12},{"nome":"Skullcrusher barra W no cabo","series":3,"reps":12}]}]},"B":{"label":"TREINO B — Costas + Bíceps","grupos":[{"nome":"Costas","exercicios":[{"nome":"Leg raise banco inclinado","series":3,"reps":15},{"nome":"Puxada aberta supinada","series":4,"reps":10},{"nome":"Remada inclinada supinada","series":4,"reps":10},{"nome":"Remada unilateral","series":3,"reps":12},{"nome":"Pullover no cabo","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Preacher na máquina","series":4,"reps":10},{"nome":"Rosca martelo","series":3,"reps":12}]}]},"C":{"label":"TREINO C — Quadríceps + Panturrilha","grupos":[{"nome":"Quadríceps","exercicios":[{"nome":"Extensão na cadeira","series":4,"reps":12},{"nome":"Agachamento","series":4,"reps":10},{"nome":"Avanço (Lunge)","series":3,"reps":12},{"nome":"Extensão unilateral","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Panturrilha de pé","series":4,"reps":15},{"nome":"Panturrilha sentado","series":3,"reps":15}]}]},"D":{"label":"TREINO D — Ombro + Peito","grupos":[{"nome":"Ombro","exercicios":[{"nome":"Cable rear delt flyes","series":3,"reps":15},{"nome":"Elevação lateral no banco","series":4,"reps":12},{"nome":"Shoulder press","series":4,"reps":10},{"nome":"Elevação lateral na máquina","series":3,"reps":12},{"nome":"Elevação frontal no cabo","series":3,"reps":12},{"nome":"Bent over dumbell rear delt","series":3,"reps":15}]},{"nome":"PEITO","exercicios":[{"nome":"Supino inclinado","series":4,"reps":10},{"nome":"Dip","series":3,"reps":12}]},{"nome":"Ombro","exercicios":[{"nome":"Encolhimento","series":4,"reps":12}]}]},"E":{"label":"TREINO E — Posterior + Costas","grupos":[{"nome":"Posterior de coxa","exercicios":[{"nome":"Hiperextensão","series":3,"reps":12},{"nome":"Lying leg curl","series":4,"reps":10},{"nome":"Hip raises","series":3,"reps":15},{"nome":"Single leg hamstring curl","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Extensão de panturrilha na máquina","series":4,"reps":15}]},{"nome":"Costas","exercicios":[{"nome":"Puxada aberta","series":4,"reps":10},{"nome":"Remada apoiada inclinada","series":4,"reps":10}]}]},"F":{"label":"TREINO F — Braços","grupos":[{"nome":"Tríceps","exercicios":[{"nome":"Extensão corda no cabo","series":4,"reps":12},{"nome":"Skullcrusher no cabo","series":3,"reps":12},{"nome":"Halter acima da cabeça","series":3,"reps":12},{"nome":"Invertido unilateral no cabo","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Barra W","series":4,"reps":10},{"nome":"Rosca halter unilateral no banco","series":3,"reps":12},{"nome":"Rosca martelo no cabo","series":3,"reps":12},{"nome":"Rosca invertida","series":3,"reps":12}]}]}};
 
-let treinos = JSON.parse(JSON.stringify(TREINOS_DATA));
+const STORAGE_KEY='treinos_saved';
+function loadTreinos(){const s=localStorage.getItem(STORAGE_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(TREINOS_DATA));}
+function saveToStorage(){localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));}
+let treinos = loadTreinos();
 let editMode=false, currentTab='A';
 
 // ── DONE STATE ────────────────────────────────────────────────────────
@@ -1151,8 +1151,9 @@ function updateProgressUI(key){
 }
 function toggleEditMode(){
   editMode=!editMode;
+  if(!editMode)saveToStorage();
   const btn=document.getElementById('edit-toggle'),banner=document.getElementById('edit-banner');
-  btn.textContent=editMode?'✅ Concluir':'✏️ Editar';btn.classList.toggle('active',editMode);banner.classList.toggle('show',editMode);
+  btn.textContent=editMode?'✅ Salvar alterações':'✏️ Editar';btn.classList.toggle('active',editMode);banner.classList.toggle('show',editMode);
   document.getElementById('footer-note').textContent=editMode?'Modo edição — defina séries×reps, renomeie e reordene.':'Toque no exercício para expandir · ✓ para marcar direto';
   document.querySelectorAll('.treino-panel').forEach(p=>p.classList.toggle('edit-mode',editMode));
 }
@@ -1193,12 +1194,6 @@ function initDrag(listEl,key,gi){
 }
 function reorderEx(key,gi,from,to){const arr=treinos[key].grupos[gi].exercicios;const[m]=arr.splice(from,1);arr.splice(to,0,m);rebuildPanel(key);}
 
-function downloadFile(){
-  const html=document.documentElement.outerHTML;
-  const updated=html.replace(/const TREINOS_DATA = \{.*?\};/s,`const TREINOS_DATA = ${JSON.stringify(treinos)};`);
-  const blob=new Blob([updated],{type:'text/html'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='meu_treino.html';a.click();URL.revokeObjectURL(a.href);
-}
 
 function switchTab(key){
   currentTab=key;
