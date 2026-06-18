@@ -1,14 +1,15 @@
 # Meu Treino
 
-App pessoal de acompanhamento de treinos de musculação. Hoje é um único arquivo HTML
-autocontido (`index.html`) com HTML + CSS + JavaScript embutidos, sem build step
-e sem backend. Roda 100% no navegador.
+App pessoal de acompanhamento de treinos de musculação. Único arquivo HTML
+autocontido (`index.html`) com HTML + CSS + JavaScript embutidos, sem build step.
+Roda 100% no navegador, com sync entre dispositivos via Firebase.
 
 ## Stack atual
 - HTML/CSS/JS puro (vanilla), tudo em um arquivo único.
 - Fonte: Google Fonts (Bebas Neue + DM Sans), importada via `@import` no CSS.
-- Persistência: `localStorage` do navegador (não há banco de dados nem servidor).
-- Sem dependências externas de JS (nenhum framework, nenhum bundler).
+- Persistência local: `localStorage` do navegador.
+- Sync entre dispositivos: Firebase Realtime Database + Google Authentication (CDN compat v10).
+- Sem framework JS, sem bundler.
 
 ## Estrutura de dados
 Os treinos ficam num objeto `TREINOS_DATA` (JS, hardcoded no arquivo), com a forma:
@@ -27,15 +28,21 @@ Os treinos ficam num objeto `TREINOS_DATA` (JS, hardcoded no arquivo), com a for
 Em runtime, isso é copiado para a variável `treinos` (deep clone de `TREINOS_DATA`),
 que é o estado mutável da sessão atual.
 
-Progresso "feito hoje" é salvo no `localStorage` com chave `done_{treino}_{data-do-dia}`.
+Progresso "feito hoje" é salvo no `localStorage` com chave `done_{treino}_{data-do-dia}`
+(permanece por dispositivo — não sincroniza entre celular e notebook).
+
+Edições de treinos (`treinos`) são salvas em:
+- `localStorage` com chave `treinos_saved` (cache local imediato)
+- Firebase Realtime Database em `/users/{uid}/treinos` (sync entre dispositivos)
 
 ## Funcionalidades existentes
 - 6 treinos (A–F) organizados por grupo muscular, navegáveis por abas.
-- Marcar exercício/série como concluído, com barra de progresso por treino.
-- Modo de edição: renomear exercícios/grupos, ajustar séries×reps, reordenar via
+- Marcar exercício como concluído, com barra de progresso por treino.
+- Modo de edição: renomear exercícios/grupos, ajustar séries, reordenar via
   drag-and-drop (mouse e touch), adicionar/remover exercícios e grupos.
-- Botão "Download" que serializa o estado atual de `treinos` de volta no HTML e baixa
-  um novo arquivo (backup/exportação).
+- Botão "✅ Salvar alterações" salva edições no localStorage e no Firebase.
+- Botão "☁ Entrar" no header: login com Google via popup; quando logado mostra
+  o nome do usuário e sincroniza treinos do Firebase automaticamente.
 
 ## Deploy
 - Repositório público: https://github.com/gll86/app-treino
@@ -54,9 +61,10 @@ Progresso "feito hoje" é salvo no `localStorage` com chave `done_{treino}_{data
 ## O que NÃO fazer sem perguntar antes
 - Não reescrever o app inteiro num framework (React, Vue etc.) sem alinhamento —
   qualquer migração de stack é uma decisão grande, não uma "melhoria" pontual.
-- Não remover a função de download/exportação do HTML sem ter um substituto definido
-  (é a única forma de persistência fora do localStorage hoje).
+- Não remover ou substituir o Firebase sem definir alternativa de sync entre dispositivos.
 - Não comitar nenhuma API key real no código ou no histórico do git.
+  (Nota: a `apiKey` do Firebase no `index.html` é pública por design — o Firebase
+  usa regras de segurança e domínios autorizados para proteção, não segredo da key.)
 
 ## Pipeline de desenvolvimento
 Todo change segue esta ordem obrigatória:

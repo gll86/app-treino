@@ -8,7 +8,7 @@ App pessoal para acompanhamento de treinos de musculação. Roda 100% no navegad
 
 ## O que é
 
-Um app de academia que cabe num único arquivo HTML. Você abre no celular, marca os exercícios concluídos, e o progresso fica salvo localmente. Nada é enviado para nenhum servidor.
+Um app de academia que cabe num único arquivo HTML. Você abre no celular, marca os exercícios concluídos, e o progresso fica salvo localmente. Edições nos treinos sincronizam entre dispositivos via Firebase quando você está logado com o Google.
 
 ---
 
@@ -22,9 +22,17 @@ O app é um único arquivo `index.html` com HTML, CSS e JavaScript embutidos. Se
 - **Sem ponto de falha externo** — não depende de CDN, de API, de nada que possa sair do ar
 - **Simples de entender** — qualquer pessoa que sabe HTML/CSS/JS consegue ler e modificar
 
-### Persistência sem banco de dados
+### Persistência e sync entre dispositivos
 
-O progresso do dia é salvo no `localStorage` do browser com a chave `done_{treino}_{data}`. Funciona offline, persiste entre sessões, e não precisa de conta ou login. A contrapartida: o progresso fica no dispositivo — não sincroniza entre celular e notebook.
+O progresso do dia (exercícios marcados como concluídos) é salvo no `localStorage` com a chave `done_{treino}_{data}`. Funciona offline, persiste entre sessões, e é por dispositivo — não sincroniza entre celular e notebook (faz sentido: o treino de hoje no celular não precisa aparecer no notebook).
+
+As edições nos treinos (nomes, séries, ordem dos exercícios) sincronizam entre dispositivos via **Firebase Realtime Database**. O fluxo é:
+
+1. O app carrega do `localStorage` imediatamente (rápido, sem esperar rede)
+2. Se o usuário estiver logado, busca os treinos do Firebase e atualiza o app
+3. Ao salvar edições ("✅ Salvar alterações"), escreve em ambos: localStorage e Firebase
+
+A autenticação usa **Google Sign-In** — o botão "☁ Entrar" no header abre um popup de login. Os dados ficam em `/users/{uid}/treinos` no Firebase, com regras que garantem que cada usuário só lê e escreve os próprios dados.
 
 ### Os treinos ficam no código
 
@@ -44,9 +52,9 @@ const TREINOS_DATA = {
 
 Em runtime isso é clonado para uma variável mutável (`treinos`), que recebe as edições da sessão.
 
-### Editar sem backend
+### Editar e salvar
 
-O modo de edição permite renomear exercícios e grupos, ajustar séries×reps, reordenar via drag-and-drop (funciona no touch também) e adicionar/remover itens — tudo em memória. Para salvar permanentemente, o botão "Download" serializa o estado atual de volta num novo `index.html` e baixa o arquivo.
+O modo de edição permite renomear exercícios e grupos, ajustar séries, reordenar via drag-and-drop (funciona no touch também) e adicionar/remover itens — tudo em memória. O botão "✅ Salvar alterações" persiste as mudanças no `localStorage` e, se o usuário estiver logado, sincroniza com o Firebase em seguida.
 
 ---
 
@@ -132,7 +140,7 @@ Vanilla JS com funções pequenas e diretas cobre 100% do que é necessário aqu
 
 ### Por que arquivo único
 
-Facilita o backup (um arquivo), facilita compartilhar (um arquivo), e o botão de "Download" consegue serializar o estado atual dos treinos de volta no próprio HTML — um mecanismo de exportação que só funciona porque tudo está num lugar só.
+Facilita o backup (um arquivo), facilita compartilhar (um arquivo), e mantém o deploy simples: um `git push` publica uma nova versão via GitHub Pages sem build step ou pipeline de CI.
 
 ---
 
@@ -142,23 +150,27 @@ Facilita o backup (um arquivo), facilita compartilhar (um arquivo), e o botão d
 index.html
 ├── <head>
 │   ├── Google Fonts (Bebas Neue + DM Sans) via @import
-│   └── CSS embutido com custom properties (--accent, --bg, --card, ...)
+│   ├── CSS embutido com custom properties (--accent, --bg, --card, ...)
+│   └── Firebase SDK (app-compat, auth-compat, database-compat) via CDN
 ├── <body>
-│   ├── <header>       barra superior com título, botão editar e data
+│   ├── <header>       barra superior com título, botão editar, botão login e data
 │   ├── #edit-banner   banner visível apenas no modo de edição
 │   ├── #tabs          abas A–F
 │   ├── #panels        painéis de cada treino (pré-renderizados no HTML)
 │   └── footer-note    instrução de uso no rodapé
 └── <script>
-    ├── TREINOS_DATA      objeto com os 6 treinos (hardcoded)
-    ├── treinos           deep clone mutável de TREINOS_DATA
-    ├── buildAll/Panel    renderizam os painéis dinamicamente no carregamento
-    ├── makeExItem        cria o elemento DOM de cada exercício
-    ├── toggleEditMode    alterna modo uso ↔ edição
-    ├── quickCompleteEx   marca/desmarca exercício como concluído
-    ├── loadDone/saveDone leem/escrevem localStorage
-    ├── initDrag          drag-and-drop para reordenação (mouse + touch)
-    └── downloadFile      serializa estado atual → novo index.html para download
+    ├── TREINOS_DATA        objeto com os 6 treinos (hardcoded)
+    ├── treinos             deep clone mutável de TREINOS_DATA
+    ├── Firebase init       config + auth + db (Realtime Database)
+    ├── handleAuth          login/logout com Google via popup
+    ├── loadFromFirebase    carrega treinos do Firebase e reconstrói painéis
+    ├── saveToCloud         escreve treinos em /users/{uid}/treinos
+    ├── buildAll/Panel      renderizam os painéis dinamicamente
+    ├── makeExItem          cria o elemento DOM de cada exercício
+    ├── toggleEditMode      alterna modo uso ↔ edição (salva ao sair)
+    ├── quickCompleteEx     marca/desmarca exercício como concluído
+    ├── loadDone/saveDone   leem/escrevem localStorage (progresso diário)
+    └── initDrag            drag-and-drop para reordenação (mouse + touch)
 ```
 
 ---
