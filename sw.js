@@ -1,4 +1,4 @@
-const CACHE = 'meu-treino-v1';
+const CACHE = 'meu-treino-v2';
 const PRECACHE = ['./', './index.html', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
