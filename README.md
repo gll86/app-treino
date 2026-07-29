@@ -8,7 +8,7 @@ App pessoal para acompanhamento de treinos de musculação. Roda 100% no navegad
 
 ## O que é
 
-Um app de academia que cabe num único arquivo HTML. Você abre no celular, marca os exercícios concluídos, e o progresso fica salvo localmente. Edições nos treinos sincronizam entre dispositivos via Firebase quando você está logado com o Google.
+Um app de academia que cabe num único arquivo HTML. Você abre no celular, inicia o treino guiado, confirma exercício por exercício (com a carga usada) e o progresso fica salvo localmente. Edições nos treinos, cargas e histórico de evolução sincronizam entre dispositivos via Firebase quando você está logado com o Google.
 
 É um **PWA (Progressive Web App)**: pode ser instalado direto do browser e abre em tela cheia como um app nativo, sem barra de endereço.
 
@@ -40,7 +40,21 @@ As edições nos treinos (nomes, séries, ordem dos exercícios) sincronizam ent
 2. Se o usuário estiver logado, busca os treinos do Firebase e atualiza o app
 3. Ao salvar edições ("✅ Salvar alterações"), escreve em ambos: localStorage e Firebase
 
-A autenticação usa **Google Sign-In** — o botão "☁ Entrar" no header abre um popup de login. Os dados ficam em `/users/{uid}/treinos` no Firebase, com regras que garantem que cada usuário só lê e escreve os próprios dados.
+A autenticação usa **Google Sign-In** — o botão "☁ Entrar" no header abre um popup de login. Os dados ficam em `/users/{uid}/treinos`, `/users/{uid}/cargas` e `/users/{uid}/historico` no Firebase, com regras que garantem que cada usuário só lê e escreve os próprios dados.
+
+### Sessão guiada, carga e histórico
+
+Cada exercício tem um campo de carga (kg): começa vazio e, depois de preenchido uma vez, sempre recarrega o último valor salvo (`cargas[treino][nomeExercício]`).
+
+O progresso não é mais marcado livremente tocando em qualquer exercício. O botão "▶ Iniciar treino" liga uma sessão guiada que destaca visualmente (borda, sombra, tag "AGORA") o próximo exercício pendente — só ele responde ao toque. Confirmar aquele exercício:
+
+1. marca como concluído
+2. grava um ponto de histórico (`historico[treino][nomeExercício]`) com a data e a carga preenchida, se houver
+3. avança automaticamente o destaque para o próximo pendente
+
+Ao concluir todos, aparece a tela de "TREINO CONCLUÍDO!". Durante a sessão, o botão vira "■ Encerrar treino": aborta e reseta o progresso do dia sem gravar nada (mesma ação do ↺ de reset que já existia).
+
+O histórico por enquanto é só persistência (Firebase + localStorage) — ainda não tem uma tela própria de gráfico/evolução.
 
 ### Os treinos ficam no código
 
@@ -140,6 +154,8 @@ git push
 
 **Análise por IA** — chamava a API da Anthropic para sugestões de progressão baseadas no histórico do exercício. Dependia de um contexto específico (rodava dentro do Claude.ai artifacts, que injeta autenticação automaticamente) e foi removida junto com o histórico.
 
+**Marcação livre de exercícios** — originalmente qualquer exercício podia ser marcado como concluído tocando em qualquer ordem. Substituído por uma sessão guiada obrigatória (só o exercício em destaque responde ao toque, avançando automaticamente ao confirmar) porque a marcação livre não deixava claro qual exercício fazer em seguida, e passou a ser o ponto de entrada natural para registrar a carga usada em cada um.
+
 ### Por que não usar um framework
 
 A pergunta natural ao ver um app de interface interativa é "por que não React/Vue?". A resposta é custo-benefício: o app tem uma tela, sem roteamento, sem estado global complexo, sem server-side rendering, sem time trabalhando nele. Adicionar um framework significaria build step, `node_modules`, configuração de bundler e uma camada extra de abstração — tudo isso para resolver problemas que esse app não tem.
@@ -169,14 +185,19 @@ index.html
 └── <script>
     ├── TREINOS_DATA        objeto com os 6 treinos (hardcoded)
     ├── treinos             deep clone mutável de TREINOS_DATA
+    ├── cargas/historico    estado de carga por exercício e histórico de evolução
     ├── Firebase init       config + auth + db (Realtime Database)
     ├── handleAuth          login/logout com Google via popup
-    ├── loadFromFirebase    carrega treinos do Firebase e reconstrói painéis
+    ├── loadFromFirebase    carrega treinos/cargas/historico e reconstrói painéis
     ├── saveToCloud         escreve treinos em /users/{uid}/treinos
+    ├── saveCargas/Historico escrevem em /users/{uid}/cargas e /historico
     ├── buildAll/Panel      renderizam os painéis dinamicamente
-    ├── makeExItem          cria o elemento DOM de cada exercício
+    ├── makeExItem          cria o elemento DOM de cada exercício (com input de carga)
     ├── toggleEditMode      alterna modo uso ↔ edição (salva ao sair)
-    ├── quickCompleteEx     marca/desmarca exercício como concluído
+    ├── startSession        liga a sessão guiada (destaca o próximo exercício)
+    ├── updateSessionHighlight  aplica/move a classe .current entre exercícios
+    ├── quickCompleteEx     confirma o exercício em destaque (só ele é clicável)
+    ├── logHistorico        grava um ponto de histórico ao confirmar um exercício
     ├── loadDone/saveDone   leem/escrevem localStorage (progresso diário)
     └── initDrag            drag-and-drop para reordenação (mouse + touch)
 ```

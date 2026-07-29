@@ -29,20 +29,38 @@ Em runtime, isso é copiado para a variável `treinos` (deep clone de `TREINOS_D
 que é o estado mutável da sessão atual.
 
 Progresso "feito hoje" é salvo no `localStorage` com chave `done_{treino}_{data-do-dia}`
-(permanece por dispositivo — não sincroniza entre celular e notebook).
+(permanece por dispositivo — não sincroniza entre celular e notebook). O mesmo vale
+para o estado da sessão guiada, em `session_{treino}_{data-do-dia}`.
 
 Edições de treinos (`treinos`) são salvas em:
 - `localStorage` com chave `treinos_saved` (cache local imediato)
 - Firebase Realtime Database em `/users/{uid}/treinos` (sync entre dispositivos)
 
+Carga (peso) por exercício e histórico de evolução seguem o mesmo padrão, com
+identificação pelo **nome do exercício** (não há sistema de IDs no app — renomear um
+exercício "perde" o histórico associado ao nome antigo):
+```js
+cargas["A"]["Supino inclinado barra"]      // número (kg), último valor
+historico["A"]["Supino inclinado barra"]   // [{data:'YYYY-MM-DD', carga}, ...]
+```
+- `localStorage`: `cargas_saved` e `historico_saved`
+- Firebase: `/users/{uid}/cargas` e `/users/{uid}/historico`
+
 ## Funcionalidades existentes
 - 6 treinos (A–F) organizados por grupo muscular, navegáveis por abas.
-- Marcar exercício como concluído, com barra de progresso por treino.
+- Input de carga (kg) por exercício, sempre recarregando o último valor salvo.
+- Sessão guiada obrigatória: botão "▶ Iniciar treino" destaca o próximo exercício
+  pendente (borda, sombra, tag "AGORA"); só ele responde ao toque, e confirmar avança
+  automaticamente para o seguinte, registrando um ponto de histórico se houver carga
+  preenchida. Não existe mais marcação livre fora de ordem — é o fluxo obrigatório.
+  Durante a sessão o botão vira "■ Encerrar treino": aborta e reseta o progresso do
+  dia sem gravar nada (mesma ação do ↺ de reset).
+- Barra de progresso por treino, com tela de "TREINO CONCLUÍDO!" ao final.
 - Modo de edição: renomear exercícios/grupos, ajustar séries, reordenar via
   drag-and-drop (mouse e touch), adicionar/remover exercícios e grupos.
 - Botão "✅ Salvar alterações" salva edições no localStorage e no Firebase.
 - Botão "☁ Entrar" no header: login com Google via popup; quando logado mostra
-  o nome do usuário e sincroniza treinos do Firebase automaticamente.
+  o nome do usuário e sincroniza treinos, cargas e histórico do Firebase automaticamente.
 
 ## Deploy
 - Repositório público: https://github.com/gll86/app-treino
