@@ -19,7 +19,7 @@
   --red:#e05050;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:100px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:100px;overflow-x:hidden}
 
 header{background:var(--card);border-bottom:2px solid var(--accent);padding:12px 14px;position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px}
 header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--accent);flex:1}
@@ -63,14 +63,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .edit-mode .del-group-btn{display:inline-flex;align-items:center}
 
 .exercise-list{display:flex;flex-direction:column;gap:5px}
-.exercise-item{background:var(--card2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:background .15s,border-color .15s}
-.exercise-item.done{background:var(--done);border-color:var(--accent)}
+.exercise-item{background:var(--card2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:background .15s,border-color .15s,box-shadow .2s ease}
+.exercise-item.done{background:var(--done);border-color:var(--border)}
 .edit-mode .exercise-item{border-color:var(--edit-border);border-style:dashed}
 .edit-mode .exercise-item.done{background:var(--card2);border-color:var(--edit-border)}
 .edit-mode .exercise-item.dragging{opacity:.4;border-style:solid;border-color:var(--accent)}
 .edit-mode .exercise-item.drag-over{border-color:var(--accent);border-style:solid;background:var(--edit-bg)}
-.ex-row{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;user-select:none}
-.edit-mode .ex-row{cursor:default}
+.ex-row{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:default;user-select:none}
+.exercise-item.current .ex-row{cursor:pointer}
 .drag-handle{display:none;color:var(--muted);cursor:grab;font-size:1rem;flex-shrink:0;touch-action:none}
 .edit-mode .exercise-item .drag-handle{display:block}
 .ex-num{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--muted);width:22px;text-align:center;flex-shrink:0}
@@ -90,10 +90,41 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .sets-n-input{width:38px;background:var(--card3);border:1px solid var(--edit-border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:3px 5px;text-align:center;outline:none}
 .del-ex-btn{display:none;background:none;border:none;color:var(--red);font-size:1.2rem;cursor:pointer;flex-shrink:0;line-height:1}
 .edit-mode .exercise-item .del-ex-btn{display:block}
-.check-circle{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.78rem;transition:all .18s;cursor:pointer}
-.check-circle:hover{border-color:var(--accent)}
+.check-circle{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.78rem;transition:all .18s;cursor:default}
+.exercise-item.current .check-circle{cursor:pointer}
+.exercise-item.current .check-circle:hover{border-color:var(--accent)}
 .exercise-item.done .check-circle{background:var(--accent);border-color:var(--accent);color:#111}
 .edit-mode .exercise-item .check-circle{display:none}
+
+.carga-wrap{display:flex;align-items:center;flex-shrink:0}
+.carga-input{width:52px;background:var(--card3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:6px 4px;text-align:center;outline:none}
+.carga-input:focus{border-color:var(--accent)}
+.carga-input::placeholder{color:var(--muted)}
+.edit-mode .exercise-item .carga-wrap{display:none}
+
+@keyframes popCurrent{0%{box-shadow:0 0 0 2px var(--accent);opacity:.6}100%{box-shadow:0 10px 26px rgba(200,241,53,.35),0 0 0 2px var(--accent);opacity:1}}
+.exercise-item.current{
+  position:relative;z-index:5;overflow:visible;
+  border-color:var(--accent);border-width:2px;
+  background:var(--card3);
+  box-shadow:0 10px 26px rgba(200,241,53,.35),0 0 0 2px var(--accent);
+  animation:popCurrent .3s ease;
+}
+.exercise-item.current .ex-row{padding:14px 12px}
+.exercise-item.current::before{
+  content:'AGORA';position:absolute;top:-10px;left:14px;
+  background:var(--accent);color:#111;font-family:'Bebas Neue',sans-serif;
+  font-size:0.64rem;letter-spacing:1.5px;padding:2px 9px;border-radius:6px;
+}
+.exercise-item.current .ex-num{color:var(--accent)}
+.edit-mode .exercise-item.current{box-shadow:none;border-color:var(--edit-border);border-width:1px;z-index:auto}
+.edit-mode .exercise-item.current .ex-row{padding:10px 12px}
+.edit-mode .exercise-item.current::before{display:none}
+
+.start-btn{background:none;border:1px solid var(--accent);border-radius:8px;color:var(--accent);padding:4px 10px;font-size:0.72rem;font-weight:700;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.start-btn:hover{background:var(--edit-bg)}
+.start-btn.active{border-color:var(--red);color:var(--red)}
+.start-btn.active:hover{background:#2a0d0d}
 
 
 .add-ex-row{display:none;gap:6px;align-items:center;margin-top:6px}
@@ -138,6 +169,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="treino-label">PUSH A — Peito + Ombro + Tríceps</div>
         <input class="treino-title-input" value="PUSH A — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-label').textContent=this.value">
       <div class="header-btns">
+        <button class="start-btn" id="start-A" onclick="startSession('A')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-A">0/6</div>
         <button class="reset-btn" onclick="resetTreino('A')">↺</button>
       </div>
@@ -161,7 +193,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',0,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('A',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
@@ -176,7 +210,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',0,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('A',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -201,7 +237,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',1,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('A',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="3" data-gi="1" data-ei="1" draggable="false">
@@ -216,7 +254,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['A'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',1,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('A',1,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -241,7 +281,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',2,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('A',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="5" data-gi="2" data-ei="1" draggable="false">
@@ -256,7 +298,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[2].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',2,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('A',2,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -272,6 +316,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="treino-label">PULL A — Costas + Bíceps + Abdômen</div>
         <input class="treino-title-input" value="PULL A — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-label').textContent=this.value">
       <div class="header-btns">
+        <button class="start-btn" id="start-B" onclick="startSession('B')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-B">0/6</div>
         <button class="reset-btn" onclick="resetTreino('B')">↺</button>
       </div>
@@ -295,7 +340,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',0,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('B',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
@@ -310,7 +357,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',0,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('B',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2" draggable="false">
@@ -325,7 +374,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',0,2,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('B',0,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -350,7 +401,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',1,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('B',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="4" data-gi="1" data-ei="1" draggable="false">
@@ -365,7 +418,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',1,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('B',1,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -390,7 +445,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="8" oninput="treinos['B'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',2,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('B',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -406,6 +463,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="treino-label">LEGS A — Quadríceps + Posterior + Panturrilha</div>
         <input class="treino-title-input" value="LEGS A — Quadríceps + Posterior + Panturrilha" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-label').textContent=this.value">
       <div class="header-btns">
+        <button class="start-btn" id="start-C" onclick="startSession('C')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-C">0/5</div>
         <button class="reset-btn" onclick="resetTreino('C')">↺</button>
       </div>
@@ -429,7 +487,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',0,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('C',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
@@ -444,7 +504,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',0,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('C',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2" draggable="false">
@@ -459,7 +521,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',0,2,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('C',0,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -484,7 +548,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',1,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('C',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -509,7 +575,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['C'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',2,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('C',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -525,6 +593,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="treino-label">PUSH B — Peito + Ombro + Tríceps</div>
         <input class="treino-title-input" value="PUSH B — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-label').textContent=this.value">
       <div class="header-btns">
+        <button class="start-btn" id="start-D" onclick="startSession('D')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-D">0/6</div>
         <button class="reset-btn" onclick="resetTreino('D')">↺</button>
       </div>
@@ -548,7 +617,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',0,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('D',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
@@ -563,7 +634,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['D'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',0,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('D',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -588,7 +661,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['D'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',1,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('D',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="3" data-gi="1" data-ei="1" draggable="false">
@@ -603,7 +678,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',1,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('D',1,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -628,7 +705,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',2,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('D',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="5" data-gi="2" data-ei="1" draggable="false">
@@ -643,7 +722,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[2].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',2,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('D',2,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -659,6 +740,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="treino-label">PULL B — Costas + Bíceps + Abdômen</div>
         <input class="treino-title-input" value="PULL B — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['E'].label=this.value;document.querySelector('#panel-E .treino-label').textContent=this.value">
       <div class="header-btns">
+        <button class="start-btn" id="start-E" onclick="startSession('E')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-E">0/6</div>
         <button class="reset-btn" onclick="resetTreino('E')">↺</button>
       </div>
@@ -682,7 +764,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',0,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('E',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
@@ -697,7 +781,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',0,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('E',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -722,7 +808,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',1,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('E',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="3" data-gi="1" data-ei="1" draggable="false">
@@ -737,7 +825,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',1,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('E',1,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="4" data-gi="1" data-ei="2" draggable="false">
@@ -752,7 +842,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[1].exercicios[2].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',1,2,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('E',1,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -777,7 +869,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="8" oninput="treinos['E'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',2,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('E',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -793,6 +887,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="treino-label">LEGS B — Posterior + Quadríceps + Panturrilha</div>
         <input class="treino-title-input" value="LEGS B — Posterior + Quadríceps + Panturrilha" placeholder="Nome..." oninput="treinos['F'].label=this.value;document.querySelector('#panel-F .treino-label').textContent=this.value">
       <div class="header-btns">
+        <button class="start-btn" id="start-F" onclick="startSession('F')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-F">0/5</div>
         <button class="reset-btn" onclick="resetTreino('F')">↺</button>
       </div>
@@ -816,7 +911,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['F'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',0,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('F',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
@@ -831,7 +928,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['F'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',0,1,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('F',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2" draggable="false">
@@ -846,7 +945,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',0,2,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('F',0,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -871,7 +972,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',1,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('F',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -896,7 +999,9 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['F'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
-
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',2,0,this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('F',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
@@ -913,9 +1018,34 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 const TREINOS_DATA = {"A":{"label":"PUSH A — Peito + Ombro + Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Supino inclinado barra","series":4,"reps":8},{"nome":"Supino halter plano","series":4,"reps":10}]},{"nome":"Ombro","exercicios":[{"nome":"Shoulder press","series":4,"reps":10},{"nome":"Elevação lateral","series":5,"reps":15}]},{"nome":"Tríceps","exercicios":[{"nome":"Dip (tronco ereto, foco tríceps)","series":3,"reps":10},{"nome":"Francês halter acima da cabeça (cabeça longa)","series":3,"reps":12}]}]},"B":{"label":"PULL A — Costas + Bíceps + Abdômen","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada aberta supinada","series":4,"reps":10},{"nome":"Remada unilateral halter","series":3,"reps":10},{"nome":"Pullover na polia em pé","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Preacher máquina (cabeça curta)","series":4,"reps":10},{"nome":"Rosca martelo (braquial)","series":3,"reps":12}]},{"nome":"Abdômen","exercicios":[{"nome":"Abdominal","series":8,"reps":12}]}]},"C":{"label":"LEGS A — Quadríceps + Posterior + Panturrilha","grupos":[{"nome":"Quadríceps","exercicios":[{"nome":"Agachamento búlgaro","series":4,"reps":10},{"nome":"Leg press","series":4,"reps":10},{"nome":"Extensão na cadeira","series":3,"reps":12}]},{"nome":"Posterior de coxa","exercicios":[{"nome":"Stiff/RDL (carga moderada)","series":3,"reps":10}]},{"nome":"Panturrilha","exercicios":[{"nome":"Panturrilha em pé (pausa no alongamento)","series":5,"reps":15}]}]},"D":{"label":"PUSH B — Peito + Ombro + Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Crucifixo inclinado","series":3,"reps":12},{"nome":"Crossover no cabo","series":4,"reps":15}]},{"nome":"Ombro","exercicios":[{"nome":"Elevação lateral (variação)","series":5,"reps":15},{"nome":"Facepull","series":3,"reps":15}]},{"nome":"Tríceps","exercicios":[{"nome":"Francês unilateral acima da cabeça (cabeça longa)","series":3,"reps":12},{"nome":"Extensão corda no cabo (lateral/medial)","series":3,"reps":12}]}]},"E":{"label":"PULL B — Costas + Bíceps + Abdômen","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada aberta","series":4,"reps":10},{"nome":"Remada triângulo baixa","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Barra W (longa + curta)","series":4,"reps":10},{"nome":"Rosca inclinada halter, banco 45° (cabeça longa)","series":3,"reps":10},{"nome":"Rosca invertida (antebraço)","series":3,"reps":12}]},{"nome":"Abdômen","exercicios":[{"nome":"Abdominal","series":8,"reps":12}]}]},"F":{"label":"LEGS B — Posterior + Quadríceps + Panturrilha","grupos":[{"nome":"Posterior de coxa","exercicios":[{"nome":"Stiff/RDL (carga pesada)","series":4,"reps":8},{"nome":"Hiperextensão","series":4,"reps":12},{"nome":"Hamstring curl","series":3,"reps":12}]},{"nome":"Quadríceps","exercicios":[{"nome":"Leg press (carga moderada)","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Panturrilha sentada (pausa no alongamento)","series":5,"reps":15}]}]}};
 
 const STORAGE_KEY='treinos_saved';
+const CARGAS_KEY='cargas_saved';
+const HIST_KEY='historico_saved';
 function loadTreinos(){const s=localStorage.getItem(STORAGE_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(TREINOS_DATA));}
 function saveToStorage(){localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));saveToCloud();}
+function loadCargas(){try{return JSON.parse(localStorage.getItem(CARGAS_KEY))||{};}catch{return{};}}
+function loadHistorico(){try{return JSON.parse(localStorage.getItem(HIST_KEY))||{};}catch{return{};}}
+function saveCargas(){localStorage.setItem(CARGAS_KEY,JSON.stringify(cargas));if(currentUser)db.ref(`users/${currentUser.uid}/cargas`).set(cargas);}
+function saveHistorico(){localStorage.setItem(HIST_KEY,JSON.stringify(historico));if(currentUser)db.ref(`users/${currentUser.uid}/historico`).set(historico);}
+function updateCarga(key,gi,ei,val){
+  const nome=treinos[key].grupos[gi].exercicios[ei].nome;
+  const num=val===''?NaN:parseFloat(String(val).replace(',','.'));
+  if(!cargas[key])cargas[key]={};
+  if(isNaN(num))delete cargas[key][nome];else cargas[key][nome]=num;
+  saveCargas();
+}
+function logHistorico(key,gi,ei){
+  const nome=treinos[key].grupos[gi].exercicios[ei].nome,carga=cargas[key]?.[nome];
+  if(carga==null)return;
+  const hoje=new Date().toISOString().slice(0,10);
+  if(!historico[key])historico[key]={};
+  if(!historico[key][nome])historico[key][nome]=[];
+  const arr=historico[key][nome],e=arr.find(x=>x.data===hoje);
+  if(e)e.carga=carga;else arr.push({data:hoje,carga});
+  saveHistorico();
+}
 let treinos = loadTreinos();
+let cargas = loadCargas();
+let historico = loadHistorico();
 
 // ── FIREBASE ──────────────────────────────────────────────────────────
 firebase.initializeApp({
@@ -957,10 +1087,21 @@ function saveToCloud(){
 
 function loadFromFirebase(){
   const btn=document.getElementById('auth-btn');if(btn)btn.textContent='⏳';
-  db.ref(`users/${currentUser.uid}/treinos`).once('value').then(snap=>{
-    const data=snap.val();
-    if(data){treinos=data;localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));buildAll();}
+  Promise.all([
+    db.ref(`users/${currentUser.uid}/treinos`).once('value'),
+    db.ref(`users/${currentUser.uid}/cargas`).once('value'),
+    db.ref(`users/${currentUser.uid}/historico`).once('value')
+  ]).then(([tSnap,cSnap,hSnap])=>{
+    const data=tSnap.val();
+    if(data){treinos=data;localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));}
     else saveToCloud();
+    const c=cSnap.val();
+    if(c){cargas=c;localStorage.setItem(CARGAS_KEY,JSON.stringify(cargas));}
+    else saveCargas();
+    const h=hSnap.val();
+    if(h){historico=h;localStorage.setItem(HIST_KEY,JSON.stringify(historico));}
+    else saveHistorico();
+    buildAll();
     updateAuthUI();
   }).catch(()=>{if(btn)btn.textContent='⚠ offline';});
 }
@@ -970,6 +1111,40 @@ let editMode=false, currentTab='A';
 function getDoneKey(t){return `done_${t}_${new Date().toDateString()}`;}
 function loadDone(t){try{return JSON.parse(localStorage.getItem(getDoneKey(t)))||[];}catch{return[];}}
 function saveDone(t,a){try{localStorage.setItem(getDoneKey(t),JSON.stringify(a));}catch{}}
+
+// ── SESSAO GUIADA ─────────────────────────────────────────────────────
+function getSessionKey(t){return `session_${t}_${new Date().toDateString()}`;}
+function isSessionActive(t){return localStorage.getItem(getSessionKey(t))==='1';}
+function setSessionActive(t,v){v?localStorage.setItem(getSessionKey(t),'1'):localStorage.removeItem(getSessionKey(t));}
+function getCurrentIdx(key){
+  const total=treinos[key].grupos.flatMap(g=>g.exercicios).length,done=loadDone(key);
+  for(let i=0;i<total;i++) if(!done.includes(i)) return i;
+  return -1;
+}
+function updateStartBtn(key){
+  const btn=document.getElementById(`start-${key}`);if(!btn)return;
+  const total=treinos[key].grupos.flatMap(g=>g.exercicios).length,dc=loadDone(key).length;
+  if(total===0||dc===total){btn.style.display='none';return;}
+  btn.style.display='';
+  const on=isSessionActive(key);
+  btn.textContent=on?'■ Encerrar treino':'▶ Iniciar treino';
+  btn.classList.toggle('active',on);
+  btn.onclick=on?()=>resetTreino(key):()=>startSession(key);
+}
+function updateSessionHighlight(key,scroll){
+  const panel=document.getElementById(`panel-${key}`);if(!panel)return;
+  panel.querySelectorAll('.exercise-item.current').forEach(i=>i.classList.remove('current'));
+  if(isSessionActive(key)){
+    const idx=getCurrentIdx(key);
+    if(idx===-1){setSessionActive(key,false);}
+    else{
+      const item=panel.querySelector(`.exercise-item[data-idx="${idx}"]`);
+      if(item){item.classList.add('current');if(scroll)item.scrollIntoView({behavior:'smooth',block:'center'});}
+    }
+  }
+  updateStartBtn(key);
+}
+function startSession(key){setSessionActive(key,true);updateSessionHighlight(key,true);}
 
 // ── BUILD ─────────────────────────────────────────────────────────────
 const tabsEl=document.getElementById('tabs');
@@ -998,6 +1173,7 @@ function buildPanel(key){
       <input class="treino-title-input" value="${esc(data.label)}" placeholder="Nome..."
         oninput="treinos['${key}'].label=this.value;document.querySelector('#panel-${key} .treino-label').textContent=this.value">
       <div class="header-btns">
+        <button class="start-btn" id="start-${key}" onclick="startSession('${key}')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-${key}">${dc}/${total}</div>
         <button class="reset-btn" onclick="resetTreino('${key}')">↺</button>
       </div>
@@ -1009,6 +1185,7 @@ function buildPanel(key){
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div>`;
   panelsEl.appendChild(panel);renderGroups(key);
+  updateSessionHighlight(key,false);
 }
 
 function renderGroups(key){
@@ -1042,6 +1219,7 @@ function makeExItem(key,gi,ei,idx,ex,isDone){
   item.className='exercise-item'+(isDone?' done':'');
   item.dataset.idx=idx;item.dataset.gi=gi;item.dataset.ei=ei;
   const sn=ex.series||3,rn=ex.reps||12;
+  const cargaVal=cargas[key]?.[ex.nome]??'';
   item.innerHTML=`
     <div class="ex-row">
       <span class="drag-handle">⠿</span>
@@ -1056,12 +1234,18 @@ function makeExItem(key,gi,ei,idx,ex,isDone){
         <input class="sets-n-input" type="number" min="1" max="10" value="${sn}"
           oninput="treinos['${key}'].grupos[${gi}].exercicios[${ei}].series=parseInt(this.value)||3">
       </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="${cargaVal}"
+          onchange="updateCarga('${key}',${gi},${ei},this.value)">
+      </div>
       <button class="del-ex-btn" onclick="deleteEx('${key}',${gi},${ei})">×</button>
       <div class="check-circle" title="Marcar como concluído">${isDone?'✓':''}</div>
     </div>`;
   if(!editMode){
     item.querySelector('.ex-row').onclick=(e)=>{
-      if(e.target.closest('.check-circle')){quickCompleteEx(e,key,gi,ei,idx,item);}
+      if(e.target.closest('.check-circle')&&isSessionActive(key)&&idx===getCurrentIdx(key)){
+        quickCompleteEx(e,key,gi,ei,idx,item);
+      }
     };
   }
   return item;
@@ -1072,17 +1256,13 @@ function makeExItem(key,gi,ei,idx,ex,isDone){
 
 function quickCompleteEx(e,key,gi,ei,exIdx,item){
   e.stopPropagation();
-  const isDone=item.classList.contains('done');
-  const circle=item.querySelector('.check-circle');
-  if(isDone){
-    item.classList.remove('done');circle.textContent='';
-    saveDone(key,loadDone(key).filter(d=>d!==exIdx));
-  } else {
-    item.classList.add('done');circle.textContent='✓';
-    let done=loadDone(key);
-    if(!done.includes(exIdx)){done.push(exIdx);saveDone(key,done);}
-  }
+  item.classList.add('done');
+  item.querySelector('.check-circle').textContent='✓';
+  let done=loadDone(key);
+  if(!done.includes(exIdx)){done.push(exIdx);saveDone(key,done);}
+  logHistorico(key,gi,ei);
   updateProgressUI(key);
+  updateSessionHighlight(key,true);
 }
 
 // ── EDIT ACTIONS ──────────────────────────────────────────────────────
@@ -1102,7 +1282,7 @@ function rebuildPanel(key){
 }
 function resetTreino(key){
   if(!confirm(`Resetar progresso do Treino ${key}?`))return;
-  saveDone(key,[]);rebuildPanel(key);
+  saveDone(key,[]);setSessionActive(key,false);rebuildPanel(key);
 }
 function updateProgressUI(key){
   const done=loadDone(key),total=treinos[key].grupos.flatMap(g=>g.exercicios).length,dc=done.length;
