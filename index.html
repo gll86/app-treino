@@ -158,6 +158,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
   <h1>MEU TREINO</h1>
   <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
   <button class="hdr-btn" id="auth-btn" onclick="handleAuth()">☁ Entrar</button>
+  <button class="hdr-btn" id="strava-btn" onclick="handleStrava()" style="display:none">🔗 Strava</button>
   <span id="today-date">QUA., 27/05</span>
 </header>
 <div id="edit-banner">
@@ -1043,9 +1044,13 @@ function logHistorico(key,gi,ei){
   if(e)e.carga=carga;else arr.push({data:hoje,carga});
   saveHistorico();
 }
+const SESSOES_KEY='sessoes_saved';
+function loadSessoes(){try{return JSON.parse(localStorage.getItem(SESSOES_KEY))||{};}catch{return{};}}
+function saveSessoes(){localStorage.setItem(SESSOES_KEY,JSON.stringify(sessoes));if(currentUser)db.ref(`users/${currentUser.uid}/sessoes`).set(sessoes);}
 let treinos = loadTreinos();
 let cargas = loadCargas();
 let historico = loadHistorico();
+let sessoes = loadSessoes();
 
 // ── FIREBASE ──────────────────────────────────────────────────────────
 firebase.initializeApp({
@@ -1061,6 +1066,29 @@ const auth=firebase.auth();
 const db=firebase.database();
 let currentUser=null;
 
+// ── STRAVA ────────────────────────────────────────────────────────────
+// preenchidos após o setup do app no Strava e o deploy das functions na Vercel
+const STRAVA_CLIENT_ID='REPLACE_ME';
+const STRAVA_API_BASE='https://REPLACE_ME.vercel.app';
+
+function handleStrava(){
+  const redirectUri=encodeURIComponent(location.origin+location.pathname);
+  location.href=`https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&approval_prompt=auto&scope=activity:read_all`;
+}
+
+function handleStravaCallback(){
+  const code=new URLSearchParams(location.search).get('code');
+  if(!code)return;
+  history.replaceState({},'',location.pathname);
+  fetch(`${STRAVA_API_BASE}/api/strava-exchange`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({code,uid:currentUser.uid})
+  }).then(r=>r.json()).then(d=>{
+    if(d.ok){localStorage.setItem('strava_connected','1');updateAuthUI();}
+  }).catch(()=>{});
+}
+
 function handleAuth(){
   if(currentUser)auth.signOut();
   else auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
@@ -1074,6 +1102,11 @@ function updateAuthUI(){
   } else {
     btn.textContent='☁ Entrar';btn.title='';btn.classList.remove('active');
   }
+  const sbtn=document.getElementById('strava-btn');if(!sbtn)return;
+  sbtn.style.display=currentUser?'':'none';
+  const connected=localStorage.getItem('strava_connected')==='1';
+  sbtn.textContent=connected?'🔗 Strava ✓':'🔗 Strava';
+  sbtn.classList.toggle('active',connected);
 }
 
 function saveToCloud(){
@@ -1090,8 +1123,9 @@ function loadFromFirebase(){
   Promise.all([
     db.ref(`users/${currentUser.uid}/treinos`).once('value'),
     db.ref(`users/${currentUser.uid}/cargas`).once('value'),
-    db.ref(`users/${currentUser.uid}/historico`).once('value')
-  ]).then(([tSnap,cSnap,hSnap])=>{
+    db.ref(`users/${currentUser.uid}/historico`).once('value'),
+    db.ref(`users/${currentUser.uid}/sessoes`).once('value')
+  ]).then(([tSnap,cSnap,hSnap,sSnap])=>{
     const data=tSnap.val();
     if(data){treinos=data;localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));}
     else saveToCloud();
@@ -1101,6 +1135,9 @@ function loadFromFirebase(){
     const h=hSnap.val();
     if(h){historico=h;localStorage.setItem(HIST_KEY,JSON.stringify(historico));}
     else saveHistorico();
+    const s=sSnap.val();
+    if(s){sessoes=s;localStorage.setItem(SESSOES_KEY,JSON.stringify(sessoes));}
+    else saveSessoes();
     buildAll();
     updateAuthUI();
   }).catch(()=>{if(btn)btn.textContent='⚠ offline';});
@@ -1345,7 +1382,7 @@ function switchTab(key){
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
 document.getElementById('today-date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'}).toUpperCase();
 buildAll();
-auth.onAuthStateChanged(user=>{currentUser=user;updateAuthUI();if(user)loadFromFirebase();});
+auth.onAuthStateChanged(user=>{currentUser=user;updateAuthUI();if(user){loadFromFirebase();handleStravaCallback();}});
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 

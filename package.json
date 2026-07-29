@@ -1,0 +1,7 @@
+{
+  "name": "app-treino-api",
+  "private": true,
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}
