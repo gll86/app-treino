@@ -66,17 +66,17 @@ Uma vez conectado, uma sincronização automática roda uma vez por noite (Verce
 
 ### Os treinos ficam no código
 
-Os 6 treinos (A–F) são um objeto JavaScript hardcoded no arquivo:
+Os 4 treinos (A–D) são um objeto JavaScript hardcoded no arquivo — um ciclo infinito de 3 dias de treino + 1 de folga (Push, Pull, Legs & Core, Cardio):
 
 ```js
 const TREINOS_DATA = {
   "A": {
-    label: "TREINO A — Peito + Tríceps",
+    label: "PUSH — Peito, Ombros e Tríceps",
     grupos: [
-      { nome: "Peito", exercicios: [{ nome: "Supino reto", series: 4, reps: 12 }, ...] }
+      { nome: "Peito", exercicios: [{ nome: "Supino inclinado com halteres", series: 4, reps: 8 }, ...] }
     ]
   },
-  // ...até F
+  // ...até D (CARDIO, dia de folga)
 }
 ```
 
@@ -190,11 +190,11 @@ index.html
 │   ├── <header>       título, data e botão ☰ que abre o menu (editar/login/Strava)
 │   ├── #hdr-menu      menu suspenso com Editar, Entrar e Strava
 │   ├── #edit-banner   banner visível apenas no modo de edição
-│   ├── #tabs          abas A–F
+│   ├── #tabs          abas A–D
 │   ├── #panels        painéis de cada treino (pré-renderizados no HTML)
 │   └── footer-note    instrução de uso no rodapé
 └── <script>
-    ├── TREINOS_DATA        objeto com os 6 treinos (hardcoded)
+    ├── TREINOS_DATA        objeto com os 4 treinos (hardcoded)
     ├── treinos             deep clone mutável de TREINOS_DATA
     ├── cargas/historico/sessoes  carga por exercício, evolução e resumo Strava
     ├── Firebase init       config + auth + db (Realtime Database)

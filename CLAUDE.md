@@ -18,13 +18,13 @@ Os treinos ficam num objeto `TREINOS_DATA` (JS, hardcoded no arquivo), com a for
 ```js
 {
   "A": {
-    label: "TREINO A — Peito + Tríceps",
+    label: "PUSH — Peito, Ombros e Tríceps",
     grupos: [
-      { nome: "Peito", exercicios: [{ nome: "Supino reto", series: 4, reps: 12 }, ...] },
+      { nome: "Peito", exercicios: [{ nome: "Supino inclinado com halteres", series: 4, reps: 8 }, ...] },
       ...
     ]
   },
-  "B": { ... }, ... até "F"
+  "B": { ... }, ... até "D"
 }
 ```
 Em runtime, isso é copiado para a variável `treinos` (deep clone de `TREINOS_DATA`),
@@ -42,8 +42,8 @@ Carga (peso) por exercício e histórico de evolução seguem o mesmo padrão, c
 identificação pelo **nome do exercício** (não há sistema de IDs no app — renomear um
 exercício "perde" o histórico associado ao nome antigo):
 ```js
-cargas["A"]["Supino inclinado barra"]      // número (kg), último valor
-historico["A"]["Supino inclinado barra"]   // [{data:'YYYY-MM-DD', carga}, ...]
+cargas["A"]["Supino inclinado com halteres"]      // número (kg), último valor
+historico["A"]["Supino inclinado com halteres"]   // [{data:'YYYY-MM-DD', carga}, ...]
 ```
 - `localStorage`: `cargas_saved` e `historico_saved`
 - Firebase: `/users/{uid}/cargas` e `/users/{uid}/historico`
@@ -61,7 +61,9 @@ sessoes["2026-07-29"]   // {duracaoMin, fcMedia, fcMax, calorias, stravaId}
   UI é uma decisão em aberto (não adicionar tela/exibição sem alinhar antes).
 
 ## Funcionalidades existentes
-- 6 treinos (A–F) organizados por grupo muscular, navegáveis por abas.
+- 4 treinos (A–D) organizados por grupo muscular, navegáveis por abas: ciclo
+  infinito 3 ON / 1 OFF — Push, Pull, Legs & Core, Cardio (dia de folga, sem
+  variação B; os 4 dias se repetem em sequência continuamente).
 - Input de carga (kg) por exercício, sempre recarregando o último valor salvo.
 - Sessão guiada obrigatória: botão "▶ Iniciar treino" destaca o próximo exercício
   pendente (borda, sombra, tag "AGORA"); só ele responde ao toque, e confirmar avança
