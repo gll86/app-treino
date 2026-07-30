@@ -38,6 +38,17 @@ Edições de treinos (`treinos`) são salvas em:
 - `localStorage` com chave `treinos_saved` (cache local imediato)
 - Firebase Realtime Database em `/users/{uid}/treinos` (sync entre dispositivos)
 
+**IMPORTANTE — sempre que o `TREINOS_DATA` hardcoded mudar de forma intencional**
+(troca de plano de treino, não edição feita pelo usuário via UI), incrementar
+`TREINOS_VERSION` (perto do `STORAGE_KEY`, no `<script>`). O app carrega
+`treinos` do `localStorage`/Firebase antes do `TREINOS_DATA` do código — sem
+esse bump, quem já usou o app antes continua vendo o plano antigo (cache local
+e nuvem têm prioridade). O bump força um reset local único e reenvia o plano
+novo pro Firebase na próxima sincronização, sobrescrevendo a versão antiga na
+nuvem. Isso também **apaga qualquer edição manual** que o usuário tenha feito
+nos treinos antes do bump — é o comportamento esperado numa troca de plano,
+mas vale avisar o usuário antes.
+
 Carga (peso) por exercício e histórico de evolução seguem o mesmo padrão, com
 identificação pelo **nome do exercício** (não há sistema de IDs no app — renomear um
 exercício "perde" o histórico associado ao nome antigo):

@@ -903,7 +903,13 @@ const TREINOS_DATA = {"A":{"label":"PUSH — Peito, Ombros e Tríceps","grupos":
 const STORAGE_KEY='treinos_saved';
 const CARGAS_KEY='cargas_saved';
 const HIST_KEY='historico_saved';
-function loadTreinos(){const s=localStorage.getItem(STORAGE_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(TREINOS_DATA));}
+const TREINOS_VERSION=2;
+const TREINOS_VERSION_KEY='treinos_version';
+function loadTreinos(){
+  const storedV=parseInt(localStorage.getItem(TREINOS_VERSION_KEY)||'0',10);
+  if(storedV<TREINOS_VERSION)return JSON.parse(JSON.stringify(TREINOS_DATA));
+  const s=localStorage.getItem(STORAGE_KEY);return s?JSON.parse(s):JSON.parse(JSON.stringify(TREINOS_DATA));
+}
 function saveToStorage(){localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));saveToCloud();}
 function loadCargas(){try{return JSON.parse(localStorage.getItem(CARGAS_KEY))||{};}catch{return{};}}
 function loadHistorico(){try{return JSON.parse(localStorage.getItem(HIST_KEY))||{};}catch{return{};}}
@@ -930,6 +936,10 @@ const SESSOES_KEY='sessoes_saved';
 function loadSessoes(){try{return JSON.parse(localStorage.getItem(SESSOES_KEY))||{};}catch{return{};}}
 function saveSessoes(){localStorage.setItem(SESSOES_KEY,JSON.stringify(sessoes));if(currentUser)db.ref(`users/${currentUser.uid}/sessoes`).set(sessoes);}
 let treinos = loadTreinos();
+if(parseInt(localStorage.getItem(TREINOS_VERSION_KEY)||'0',10)<TREINOS_VERSION){
+  localStorage.setItem(TREINOS_VERSION_KEY,TREINOS_VERSION);
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));
+}
 let cargas = loadCargas();
 let historico = loadHistorico();
 let sessoes = loadSessoes();
@@ -996,6 +1006,7 @@ function saveToCloud(){
   const btn=document.getElementById('auth-btn');const prev=btn?btn.textContent:'';
   if(btn)btn.textContent='⏳';
   db.ref(`users/${currentUser.uid}/treinos`).set(treinos)
+    .then(()=>db.ref(`users/${currentUser.uid}/treinosVersion`).set(TREINOS_VERSION))
     .then(()=>{if(btn)btn.textContent=prev;})
     .catch(()=>{if(btn)btn.textContent='⚠ sync';});
 }
@@ -1004,12 +1015,14 @@ function loadFromFirebase(){
   const btn=document.getElementById('auth-btn');if(btn)btn.textContent='⏳';
   Promise.all([
     db.ref(`users/${currentUser.uid}/treinos`).once('value'),
+    db.ref(`users/${currentUser.uid}/treinosVersion`).once('value'),
     db.ref(`users/${currentUser.uid}/cargas`).once('value'),
     db.ref(`users/${currentUser.uid}/historico`).once('value'),
     db.ref(`users/${currentUser.uid}/sessoes`).once('value')
-  ]).then(([tSnap,cSnap,hSnap,sSnap])=>{
+  ]).then(([tSnap,tvSnap,cSnap,hSnap,sSnap])=>{
     const data=tSnap.val();
-    if(data){treinos=data;localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));}
+    const cloudV=tvSnap.val()||0;
+    if(data&&cloudV>=TREINOS_VERSION){treinos=data;localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));localStorage.setItem(TREINOS_VERSION_KEY,TREINOS_VERSION);}
     else saveToCloud();
     const c=cSnap.val();
     if(c){cargas=c;localStorage.setItem(CARGAS_KEY,JSON.stringify(cargas));}
