@@ -44,12 +44,11 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .treino-panel.active{display:block}
 
 .treino-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
-.treino-label{font-size:0.76rem;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.edit-mode .treino-panel .treino-label{display:none}
 .treino-title-input{font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;background:var(--card2);border:1px solid var(--edit-border);border-radius:8px;color:var(--text);padding:5px 10px;display:none;outline:none;flex:1}
 .treino-title-input:focus{border-color:var(--accent)}
 .edit-mode .treino-title-input{display:block}
 .header-btns{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.treino-panel:not(.edit-mode) .header-btns{flex:1;justify-content:space-between}
 .progress-pill{background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:0.76rem;color:var(--accent);font-weight:700}
 .reset-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:4px 9px;font-size:0.72rem;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
 .reset-btn:hover{border-color:var(--red);color:var(--red)}
@@ -174,8 +173,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 <div class="tabs" id="tabs"><button class="tab-btn active" id="tab-A" data-key="A">PUSH</button><button class="tab-btn" id="tab-B" data-key="B">PULL</button><button class="tab-btn" id="tab-C" data-key="C">LEGS &amp; CORE</button><button class="tab-btn" id="tab-D" data-key="D">CARDIO</button></div>
 <div id="panels"><div class="treino-panel active" id="panel-A">
     <div class="treino-header">
-      <div class="treino-label">Peito, Ombros e Tríceps</div>
-      <input class="treino-title-input" value="PUSH — Peito, Ombros e Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-label').textContent=shortDesc(this.value)">
+      <input class="treino-title-input" value="PUSH — Peito, Ombros e Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value">
       <div class="header-btns">
         <button class="start-btn" id="start-A" onclick="startSession('A')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-A">0/9</div>
@@ -363,8 +361,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel" id="panel-B">
     <div class="treino-header">
-      <div class="treino-label">Costas, Trapézio, Lombar e Bíceps</div>
-      <input class="treino-title-input" value="PULL — Costas, Trapézio, Lombar e Bíceps" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-label').textContent=shortDesc(this.value)">
+      <input class="treino-title-input" value="PULL — Costas, Trapézio, Lombar e Bíceps" placeholder="Nome..." oninput="treinos['B'].label=this.value">
       <div class="header-btns">
         <button class="start-btn" id="start-B" onclick="startSession('B')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-B">0/11</div>
@@ -584,8 +581,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel" id="panel-C">
     <div class="treino-header">
-      <div class="treino-label">Pernas e Abdômen</div>
-      <input class="treino-title-input" value="LEGS &amp; CORE — Pernas e Abdômen" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-label').textContent=shortDesc(this.value)">
+      <input class="treino-title-input" value="LEGS &amp; CORE — Pernas e Abdômen" placeholder="Nome..." oninput="treinos['C'].label=this.value">
       <div class="header-btns">
         <button class="start-btn" id="start-C" onclick="startSession('C')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-C">0/13</div>
@@ -857,8 +853,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel" id="panel-D">
     <div class="treino-header">
-      <div class="treino-label">Recuperação Ativa (dia de folga)</div>
-      <input class="treino-title-input" value="CARDIO — Recuperação Ativa (dia de folga)" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-label').textContent=shortDesc(this.value)">
+      <input class="treino-title-input" value="CARDIO — Recuperação Ativa (dia de folga)" placeholder="Nome..." oninput="treinos['D'].label=this.value">
       <div class="header-btns">
         <button class="start-btn" id="start-D" onclick="startSession('D')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-D">0/1</div>
@@ -1101,9 +1096,8 @@ function buildPanel(key){
   panel.className='treino-panel'+(editMode?' edit-mode':'');panel.id=`panel-${key}`;
   panel.innerHTML=`
     <div class="treino-header">
-      <div class="treino-label">${esc(shortDesc(data.label))}</div>
       <input class="treino-title-input" value="${esc(data.label)}" placeholder="Nome..."
-        oninput="treinos['${key}'].label=this.value;document.querySelector('#panel-${key} .treino-label').textContent=shortDesc(this.value)">
+        oninput="treinos['${key}'].label=this.value">
       <div class="header-btns">
         <button class="start-btn" id="start-${key}" onclick="startSession('${key}')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-${key}">${dc}/${total}</div>
@@ -1281,7 +1275,6 @@ function switchTab(key){
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
-function shortDesc(label){const i=label.indexOf(' — ');return i===-1?label:label.slice(i+3);}
 document.getElementById('today-date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'}).toUpperCase();
 buildAll();
 auth.onAuthStateChanged(user=>{currentUser=user;updateAuthUI();if(user){loadFromFirebase();handleStravaCallback();}});
