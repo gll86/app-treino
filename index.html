@@ -1,4 +1,4 @@
-﻿<html lang="pt-BR"><head>
+<html lang="pt-BR"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Treino</title>
@@ -171,14 +171,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 <div id="edit-banner">
   <span>✏️ Arraste ⠿ · edite nomes · defina séries×reps · × remove</span>
 </div>
-<div class="tabs" id="tabs"><button class="tab-btn active" id="tab-A" data-key="A">PUSH A</button><button class="tab-btn" id="tab-B" data-key="B">PULL A</button><button class="tab-btn" id="tab-C" data-key="C">LEGS A</button><button class="tab-btn" id="tab-D" data-key="D">PUSH B</button><button class="tab-btn" id="tab-E" data-key="E">PULL B</button><button class="tab-btn" id="tab-F" data-key="F">LEGS B</button></div>
-<div id="panels"><div class="treino-panel edit-mode active" id="panel-A">
+<div class="tabs" id="tabs"><button class="tab-btn active" id="tab-A" data-key="A">PUSH</button><button class="tab-btn" id="tab-B" data-key="B">PULL</button><button class="tab-btn" id="tab-C" data-key="C">LEGS &amp; CORE</button><button class="tab-btn" id="tab-D" data-key="D">CARDIO</button></div>
+<div id="panels"><div class="treino-panel active" id="panel-A">
     <div class="treino-header">
-      <div class="treino-label">Peito + Ombro + Tríceps</div>
-        <input class="treino-title-input" value="PUSH A — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-label').textContent=shortDesc(this.value)">
+      <div class="treino-label">Peito, Ombros e Tríceps</div>
+      <input class="treino-title-input" value="PUSH — Peito, Ombros e Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-A" onclick="startSession('A')">▶ Iniciar treino</button>
-        <div class="progress-pill" id="pill-A">0/6</div>
+        <div class="progress-pill" id="pill-A">0/9</div>
         <button class="reset-btn" onclick="resetTreino('A')">↺</button>
       </div>
     </div>
@@ -189,15 +189,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <input class="group-name-input" value="Peito" placeholder="Nome do grupo..." oninput="treinos['A'].grupos[0].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('A',0)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-A-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-A-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">01</div>
       <div class="ex-info">
-        <div class="ex-name">Supino inclinado barra</div>
+        <div class="ex-name">Supino inclinado com halteres</div>
         <div class="ex-sets-badge">4 séries</div>
       </div>
-      <input class="ex-edit-input" value="Supino inclinado barra" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Supino inclinado com halteres" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
@@ -206,22 +205,37 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       </div>
       <button class="del-ex-btn" onclick="deleteEx('A',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">02</div>
       <div class="ex-info">
-        <div class="ex-name">Supino halter plano</div>
-        <div class="ex-sets-badge">4 séries</div>
+        <div class="ex-name">Crucifixo inclinado (halteres/cabo)</div>
+        <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Supino halter plano" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[1].nome=this.value">
+      <input class="ex-edit-input" value="Crucifixo inclinado (halteres/cabo)" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',0,1,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('A',0,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">03</div>
+      <div class="ex-info">
+        <div class="ex-name">Crucifixo no cabo alto</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Crucifixo no cabo alto" placeholder="Nome..." oninput="treinos['A'].grupos[0].exercicios[2].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',0,2,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('A',0,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
@@ -233,39 +247,53 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <input class="group-name-input" value="Ombro" placeholder="Nome do grupo..." oninput="treinos['A'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('A',1)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-A-1"><div class="exercise-item" data-idx="2" data-gi="1" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-A-1"><div class="exercise-item" data-idx="3" data-gi="1" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
-      <div class="ex-num">03</div>
+      <div class="ex-num">04</div>
       <div class="ex-info">
-        <div class="ex-name">Shoulder press</div>
-        <div class="ex-sets-badge">4 séries</div>
+        <div class="ex-name">Desenvolvimento com halteres</div>
+        <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Shoulder press" placeholder="Nome..." oninput="treinos['A'].grupos[1].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Desenvolvimento com halteres" placeholder="Nome..." oninput="treinos['A'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',1,0,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('A',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="3" data-gi="1" data-ei="1" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="4" data-gi="1" data-ei="1"><div class="ex-row">
       <span class="drag-handle">⠿</span>
-      <div class="ex-num">04</div>
+      <div class="ex-num">05</div>
       <div class="ex-info">
-        <div class="ex-name">Elevação lateral</div>
-        <div class="ex-sets-badge">5 séries</div>
+        <div class="ex-name">Elevação frontal na polia baixa</div>
+        <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Elevação lateral" placeholder="Nome..." oninput="treinos['A'].grupos[1].exercicios[1].nome=this.value">
+      <input class="ex-edit-input" value="Elevação frontal na polia baixa" placeholder="Nome..." oninput="treinos['A'].grupos[1].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['A'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',1,1,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('A',1,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="5" data-gi="1" data-ei="2"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">06</div>
+      <div class="ex-info">
+        <div class="ex-name">Elevação lateral no cabo</div>
+        <div class="ex-sets-badge">4 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Elevação lateral no cabo" placeholder="Nome..." oninput="treinos['A'].grupos[1].exercicios[2].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['A'].grupos[1].exercicios[2].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',1,2,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('A',1,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
@@ -277,15 +305,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <input class="group-name-input" value="Tríceps" placeholder="Nome do grupo..." oninput="treinos['A'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('A',2)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-A-2"><div class="exercise-item" data-idx="4" data-gi="2" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-A-2"><div class="exercise-item" data-idx="6" data-gi="2" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
-      <div class="ex-num">05</div>
+      <div class="ex-num">07</div>
       <div class="ex-info">
-        <div class="ex-name">Dip (tronco ereto, foco tríceps)</div>
+        <div class="ex-name">Tríceps francês (cabo/halter)</div>
         <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Dip (tronco ereto, foco tríceps)" placeholder="Nome..." oninput="treinos['A'].grupos[2].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Tríceps francês (cabo/halter)" placeholder="Nome..." oninput="treinos['A'].grupos[2].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
@@ -294,15 +321,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       </div>
       <button class="del-ex-btn" onclick="deleteEx('A',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="5" data-gi="2" data-ei="1" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="7" data-gi="2" data-ei="1"><div class="ex-row">
       <span class="drag-handle">⠿</span>
-      <div class="ex-num">06</div>
+      <div class="ex-num">08</div>
       <div class="ex-info">
-        <div class="ex-name">Francês halter acima da cabeça (cabeça longa)</div>
+        <div class="ex-name">Tríceps pulley (barra reta ou V)</div>
         <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Francês halter acima da cabeça (cabeça longa)" placeholder="Nome..." oninput="treinos['A'].grupos[2].exercicios[1].nome=this.value">
+      <input class="ex-edit-input" value="Tríceps pulley (barra reta ou V)" placeholder="Nome..." oninput="treinos['A'].grupos[2].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[2].exercicios[1].series=parseInt(this.value)||3">
       </div>
@@ -310,6 +336,22 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',2,1,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('A',2,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="8" data-gi="2" data-ei="2"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">09</div>
+      <div class="ex-info">
+        <div class="ex-name">Tríceps corda</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Tríceps corda" placeholder="Nome..." oninput="treinos['A'].grupos[2].exercicios[2].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['A'].grupos[2].exercicios[2].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('A',2,2,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('A',2,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
@@ -319,13 +361,13 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
     <div class="add-group-row"><button class="add-group-btn" onclick="addGroup('A')">+ Adicionar grupo muscular</button></div>
     <div class="congrats " id="congrats-A">
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
-    </div></div><div class="treino-panel edit-mode" id="panel-B">
+    </div></div><div class="treino-panel" id="panel-B">
     <div class="treino-header">
-      <div class="treino-label">Costas + Bíceps + Abdômen</div>
-        <input class="treino-title-input" value="PULL A — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-label').textContent=shortDesc(this.value)">
+      <div class="treino-label">Costas, Trapézio, Lombar e Bíceps</div>
+      <input class="treino-title-input" value="PULL — Costas, Trapézio, Lombar e Bíceps" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-B" onclick="startSession('B')">▶ Iniciar treino</button>
-        <div class="progress-pill" id="pill-B">0/6</div>
+        <div class="progress-pill" id="pill-B">0/11</div>
         <button class="reset-btn" onclick="resetTreino('B')">↺</button>
       </div>
     </div>
@@ -336,15 +378,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <input class="group-name-input" value="Costas" placeholder="Nome do grupo..." oninput="treinos['B'].grupos[0].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('B',0)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-B-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-B-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">01</div>
       <div class="ex-info">
-        <div class="ex-name">Puxada aberta supinada</div>
+        <div class="ex-name">Puxada alta pronada (aberta)</div>
         <div class="ex-sets-badge">4 séries</div>
       </div>
-      <input class="ex-edit-input" value="Puxada aberta supinada" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Puxada alta pronada (aberta)" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
@@ -353,15 +394,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       </div>
       <button class="del-ex-btn" onclick="deleteEx('B',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">02</div>
       <div class="ex-info">
-        <div class="ex-name">Remada unilateral halter</div>
+        <div class="ex-name">Puxada supinada (inversa)</div>
         <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Remada unilateral halter" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[1].nome=this.value">
+      <input class="ex-edit-input" value="Puxada supinada (inversa)" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
@@ -370,17 +410,16 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       </div>
       <button class="del-ex-btn" onclick="deleteEx('B',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">03</div>
       <div class="ex-info">
-        <div class="ex-name">Pullover na polia em pé</div>
-        <div class="ex-sets-badge">3 séries</div>
+        <div class="ex-name">Remada curvada com barra</div>
+        <div class="ex-sets-badge">4 séries</div>
       </div>
-      <input class="ex-edit-input" value="Pullover na polia em pé" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[2].nome=this.value">
+      <input class="ex-edit-input" value="Remada curvada com barra" placeholder="Nome..." oninput="treinos['B'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',0,2,this.value)">
@@ -393,43 +432,73 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <button class="add-ex-btn" onclick="addEx('B',0)">+</button>
       </div></div><div class="group-block" data-gi="1">
       <div class="group-header">
-        <span class="section-label">— Bíceps</span>
-        <input class="group-name-input" value="Bíceps" placeholder="Nome do grupo..." oninput="treinos['B'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
+        <span class="section-label">— Trapézio e Lombar</span>
+        <input class="group-name-input" value="Trapézio e Lombar" placeholder="Nome do grupo..." oninput="treinos['B'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('B',1)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-B-1"><div class="exercise-item" data-idx="3" data-gi="1" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-B-1"><div class="exercise-item" data-idx="3" data-gi="1" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">04</div>
       <div class="ex-info">
-        <div class="ex-name">Preacher máquina (cabeça curta)</div>
-        <div class="ex-sets-badge">4 séries</div>
+        <div class="ex-name">Remada alta na pegada aberta</div>
+        <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Preacher máquina (cabeça curta)" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Remada alta na pegada aberta" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',1,0,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('B',1,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="4" data-gi="1" data-ei="1" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="4" data-gi="1" data-ei="1"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">05</div>
       <div class="ex-info">
-        <div class="ex-name">Rosca martelo (braquial)</div>
-        <div class="ex-sets-badge">3 séries</div>
+        <div class="ex-name">Encolhimento com halteres/barra (segurar 2s)</div>
+        <div class="ex-sets-badge">4 séries</div>
       </div>
-      <input class="ex-edit-input" value="Rosca martelo (braquial)" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[1].nome=this.value">
+      <input class="ex-edit-input" value="Encolhimento com halteres/barra (segurar 2s)" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',1,1,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('B',1,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="5" data-gi="1" data-ei="2"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">06</div>
+      <div class="ex-info">
+        <div class="ex-name">Extensão lombar (banco romano)</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Extensão lombar (banco romano)" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[2].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[1].exercicios[2].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',1,2,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('B',1,2)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="6" data-gi="1" data-ei="3"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">07</div>
+      <div class="ex-info">
+        <div class="ex-name">Crucifixo invertido (cabo/halter)</div>
+        <div class="ex-sets-badge">4 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Crucifixo invertido (cabo/halter)" placeholder="Nome..." oninput="treinos['B'].grupos[1].exercicios[3].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['B'].grupos[1].exercicios[3].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',1,3,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('B',1,3)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
@@ -437,26 +506,73 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <button class="add-ex-btn" onclick="addEx('B',1)">+</button>
       </div></div><div class="group-block" data-gi="2">
       <div class="group-header">
-        <span class="section-label">— Abdômen</span>
-        <input class="group-name-input" value="Abdômen" placeholder="Nome do grupo..." oninput="treinos['B'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
+        <span class="section-label">— Bíceps</span>
+        <input class="group-name-input" value="Bíceps" placeholder="Nome do grupo..." oninput="treinos['B'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('B',2)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-B-2"><div class="exercise-item" data-idx="5" data-gi="2" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-B-2"><div class="exercise-item" data-idx="7" data-gi="2" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
-      <div class="ex-num">06</div>
+      <div class="ex-num">08</div>
       <div class="ex-info">
-        <div class="ex-name">Abdominal</div>
-        <div class="ex-sets-badge">8 séries</div>
+        <div class="ex-name">Rosca inclinada com halteres (banco 45°)</div>
+        <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Abdominal" placeholder="Nome..." oninput="treinos['B'].grupos[2].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Rosca inclinada com halteres (banco 45°)" placeholder="Nome..." oninput="treinos['B'].grupos[2].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="8" oninput="treinos['B'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',2,0,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('B',2,0)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="8" data-gi="2" data-ei="1"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">09</div>
+      <div class="ex-info">
+        <div class="ex-name">Rosca Scott (barra W)</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Rosca Scott (barra W)" placeholder="Nome..." oninput="treinos['B'].grupos[2].exercicios[1].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[2].exercicios[1].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',2,1,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('B',2,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="9" data-gi="2" data-ei="2"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">10</div>
+      <div class="ex-info">
+        <div class="ex-name">Rosca martelo com halteres</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Rosca martelo com halteres" placeholder="Nome..." oninput="treinos['B'].grupos[2].exercicios[2].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[2].exercicios[2].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',2,2,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('B',2,2)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="10" data-gi="2" data-ei="3"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">11</div>
+      <div class="ex-info">
+        <div class="ex-name">Rosca inversa (barra W)</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Rosca inversa (barra W)" placeholder="Nome..." oninput="treinos['B'].grupos[2].exercicios[3].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['B'].grupos[2].exercicios[3].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('B',2,3,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('B',2,3)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
@@ -466,13 +582,13 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
     <div class="add-group-row"><button class="add-group-btn" onclick="addGroup('B')">+ Adicionar grupo muscular</button></div>
     <div class="congrats " id="congrats-B">
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
-    </div></div><div class="treino-panel edit-mode" id="panel-C">
+    </div></div><div class="treino-panel" id="panel-C">
     <div class="treino-header">
-      <div class="treino-label">Quadríceps + Posterior + Panturrilha</div>
-        <input class="treino-title-input" value="LEGS A — Quadríceps + Posterior + Panturrilha" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-label').textContent=shortDesc(this.value)">
+      <div class="treino-label">Pernas e Abdômen</div>
+      <input class="treino-title-input" value="LEGS &amp; CORE — Pernas e Abdômen" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-C" onclick="startSession('C')">▶ Iniciar treino</button>
-        <div class="progress-pill" id="pill-C">0/5</div>
+        <div class="progress-pill" id="pill-C">0/13</div>
         <button class="reset-btn" onclick="resetTreino('C')">↺</button>
       </div>
     </div>
@@ -483,15 +599,14 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <input class="group-name-input" value="Quadríceps" placeholder="Nome do grupo..." oninput="treinos['C'].grupos[0].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('C',0)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-C-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-C-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">01</div>
       <div class="ex-info">
-        <div class="ex-name">Agachamento búlgaro</div>
+        <div class="ex-name">Agachamento livre (barra)</div>
         <div class="ex-sets-badge">4 séries</div>
       </div>
-      <input class="ex-edit-input" value="Agachamento búlgaro" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Agachamento livre (barra)" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
@@ -500,32 +615,30 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       </div>
       <button class="del-ex-btn" onclick="deleteEx('C',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">02</div>
       <div class="ex-info">
-        <div class="ex-name">Leg press</div>
-        <div class="ex-sets-badge">4 séries</div>
+        <div class="ex-name">Leg press 45° (pés baixos)</div>
+        <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Leg press" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[1].nome=this.value">
+      <input class="ex-edit-input" value="Leg press 45° (pés baixos)" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[1].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',0,1,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('C',0,1)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2" draggable="false">
-    <div class="ex-row">
+    </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">03</div>
       <div class="ex-info">
-        <div class="ex-name">Extensão na cadeira</div>
+        <div class="ex-name">Cadeira extensora (drop-set na última série)</div>
         <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Extensão na cadeira" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[2].nome=this.value">
+      <input class="ex-edit-input" value="Cadeira extensora (drop-set na última série)" placeholder="Nome..." oninput="treinos['C'].grupos[0].exercicios[2].nome=this.value">
       <div class="sets-edit-wrap">
         <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
       </div>
@@ -540,26 +653,57 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <button class="add-ex-btn" onclick="addEx('C',0)">+</button>
       </div></div><div class="group-block" data-gi="1">
       <div class="group-header">
-        <span class="section-label">— Posterior de coxa</span>
-        <input class="group-name-input" value="Posterior de coxa" placeholder="Nome do grupo..." oninput="treinos['C'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
+        <span class="section-label">— Posterior e Glúteos</span>
+        <input class="group-name-input" value="Posterior e Glúteos" placeholder="Nome do grupo..." oninput="treinos['C'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('C',1)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-C-1"><div class="exercise-item" data-idx="3" data-gi="1" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-C-1"><div class="exercise-item" data-idx="3" data-gi="1" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">04</div>
       <div class="ex-info">
-        <div class="ex-name">Stiff/RDL (carga moderada)</div>
-        <div class="ex-sets-badge">3 séries</div>
+        <div class="ex-name">Stiff com barra ou halteres</div>
+        <div class="ex-sets-badge">4 séries</div>
       </div>
-      <input class="ex-edit-input" value="Stiff/RDL (carga moderada)" placeholder="Nome..." oninput="treinos['C'].grupos[1].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Stiff com barra ou halteres" placeholder="Nome..." oninput="treinos['C'].grupos[1].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',1,0,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('C',1,0)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="4" data-gi="1" data-ei="1"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">05</div>
+      <div class="ex-info">
+        <div class="ex-name">Mesa ou cadeira flexora</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Mesa ou cadeira flexora" placeholder="Nome..." oninput="treinos['C'].grupos[1].exercicios[1].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',1,1,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',1,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="5" data-gi="1" data-ei="2"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">06</div>
+      <div class="ex-info">
+        <div class="ex-name">Elevação pélvica</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Elevação pélvica" placeholder="Nome..." oninput="treinos['C'].grupos[1].exercicios[2].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[1].exercicios[2].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',1,2,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',1,2)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
@@ -567,463 +711,194 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
         <button class="add-ex-btn" onclick="addEx('C',1)">+</button>
       </div></div><div class="group-block" data-gi="2">
       <div class="group-header">
-        <span class="section-label">— Panturrilha</span>
-        <input class="group-name-input" value="Panturrilha" placeholder="Nome do grupo..." oninput="treinos['C'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
+        <span class="section-label">— Adutores e Abdutores</span>
+        <input class="group-name-input" value="Adutores e Abdutores" placeholder="Nome do grupo..." oninput="treinos['C'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('C',2)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-C-2"><div class="exercise-item" data-idx="4" data-gi="2" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-C-2"><div class="exercise-item" data-idx="6" data-gi="2" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
-      <div class="ex-num">05</div>
+      <div class="ex-num">07</div>
       <div class="ex-info">
-        <div class="ex-name">Panturrilha em pé (pausa no alongamento)</div>
-        <div class="ex-sets-badge">5 séries</div>
+        <div class="ex-name">Cadeira abdutora (tronco à frente)</div>
+        <div class="ex-sets-badge">3 séries</div>
       </div>
-      <input class="ex-edit-input" value="Panturrilha em pé (pausa no alongamento)" placeholder="Nome..." oninput="treinos['C'].grupos[2].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Cadeira abdutora (tronco à frente)" placeholder="Nome..." oninput="treinos['C'].grupos[2].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['C'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',2,0,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('C',2,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="7" data-gi="2" data-ei="1"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">08</div>
+      <div class="ex-info">
+        <div class="ex-name">Cadeira adutora</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Cadeira adutora" placeholder="Nome..." oninput="treinos['C'].grupos[2].exercicios[1].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[2].exercicios[1].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',2,1,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',2,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
         <input class="add-ex-input" id="addinput-C-2" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('C',2)">
         <button class="add-ex-btn" onclick="addEx('C',2)">+</button>
+      </div></div><div class="group-block" data-gi="3">
+      <div class="group-header">
+        <span class="section-label">— Panturrilha</span>
+        <input class="group-name-input" value="Panturrilha" placeholder="Nome do grupo..." oninput="treinos['C'].grupos[3].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
+        <button class="del-group-btn" onclick="deleteGroup('C',3)">✕ Remover</button>
+      </div>
+      <div class="exercise-list" id="exlist-C-3"><div class="exercise-item" data-idx="8" data-gi="3" data-ei="0"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">09</div>
+      <div class="ex-info">
+        <div class="ex-name">Gêmeos em pé</div>
+        <div class="ex-sets-badge">4 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Gêmeos em pé" placeholder="Nome..." oninput="treinos['C'].grupos[3].exercicios[0].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[3].exercicios[0].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',3,0,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',3,0)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="9" data-gi="3" data-ei="1"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">10</div>
+      <div class="ex-info">
+        <div class="ex-name">Gêmeos sentado (cavalo)</div>
+        <div class="ex-sets-badge">4 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Gêmeos sentado (cavalo)" placeholder="Nome..." oninput="treinos['C'].grupos[3].exercicios[1].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[3].exercicios[1].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',3,1,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',3,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div></div>
+      <div class="add-ex-row">
+        <input class="add-ex-input" id="addinput-C-3" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('C',3)">
+        <button class="add-ex-btn" onclick="addEx('C',3)">+</button>
+      </div></div><div class="group-block" data-gi="4">
+      <div class="group-header">
+        <span class="section-label">— Abdômen</span>
+        <input class="group-name-input" value="Abdômen" placeholder="Nome do grupo..." oninput="treinos['C'].grupos[4].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
+        <button class="del-group-btn" onclick="deleteGroup('C',4)">✕ Remover</button>
+      </div>
+      <div class="exercise-list" id="exlist-C-4"><div class="exercise-item" data-idx="10" data-gi="4" data-ei="0"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">11</div>
+      <div class="ex-info">
+        <div class="ex-name">Abdominal infra (suspenso)</div>
+        <div class="ex-sets-badge">4 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Abdominal infra (suspenso)" placeholder="Nome..." oninput="treinos['C'].grupos[4].exercicios[0].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[4].exercicios[0].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',4,0,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',4,0)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="11" data-gi="4" data-ei="1"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">12</div>
+      <div class="ex-info">
+        <div class="ex-name">Abdominal supra na polia alta</div>
+        <div class="ex-sets-badge">4 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Abdominal supra na polia alta" placeholder="Nome..." oninput="treinos['C'].grupos[4].exercicios[1].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['C'].grupos[4].exercicios[1].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',4,1,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',4,1)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div><div class="exercise-item" data-idx="12" data-gi="4" data-ei="2"><div class="ex-row">
+      <span class="drag-handle">⠿</span>
+      <div class="ex-num">13</div>
+      <div class="ex-info">
+        <div class="ex-name">Abdominal oblíquo no cabo</div>
+        <div class="ex-sets-badge">3 séries</div>
+      </div>
+      <input class="ex-edit-input" value="Abdominal oblíquo no cabo" placeholder="Nome..." oninput="treinos['C'].grupos[4].exercicios[2].nome=this.value">
+      <div class="sets-edit-wrap">
+        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['C'].grupos[4].exercicios[2].series=parseInt(this.value)||3">
+      </div>
+      <div class="carga-wrap">
+        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('C',4,2,this.value)">
+      </div>
+      <button class="del-ex-btn" onclick="deleteEx('C',4,2)">×</button>
+      <div class="check-circle" title="Marcar como concluído"></div>
+    </div></div></div>
+      <div class="add-ex-row">
+        <input class="add-ex-input" id="addinput-C-4" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('C',4)">
+        <button class="add-ex-btn" onclick="addEx('C',4)">+</button>
       </div></div></div>
     <div class="add-group-row"><button class="add-group-btn" onclick="addGroup('C')">+ Adicionar grupo muscular</button></div>
     <div class="congrats " id="congrats-C">
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
-    </div></div><div class="treino-panel edit-mode" id="panel-D">
+    </div></div><div class="treino-panel" id="panel-D">
     <div class="treino-header">
-      <div class="treino-label">Peito + Ombro + Tríceps</div>
-        <input class="treino-title-input" value="PUSH B — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-label').textContent=shortDesc(this.value)">
+      <div class="treino-label">Recuperação Ativa (dia de folga)</div>
+      <input class="treino-title-input" value="CARDIO — Recuperação Ativa (dia de folga)" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-D" onclick="startSession('D')">▶ Iniciar treino</button>
-        <div class="progress-pill" id="pill-D">0/6</div>
+        <div class="progress-pill" id="pill-D">0/1</div>
         <button class="reset-btn" onclick="resetTreino('D')">↺</button>
       </div>
     </div>
     <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-D" style="width:0%"></div></div>
     <div id="groups-D"><div class="group-block" data-gi="0">
       <div class="group-header">
-        <span class="section-label">— Peito</span>
-        <input class="group-name-input" value="Peito" placeholder="Nome do grupo..." oninput="treinos['D'].grupos[0].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
+        <span class="section-label">— Cardio LISS</span>
+        <input class="group-name-input" value="Cardio LISS" placeholder="Nome do grupo..." oninput="treinos['D'].grupos[0].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
         <button class="del-group-btn" onclick="deleteGroup('D',0)">✕ Remover</button>
       </div>
-      <div class="exercise-list" id="exlist-D-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0" draggable="false">
-    <div class="ex-row">
+      <div class="exercise-list" id="exlist-D-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0"><div class="ex-row">
       <span class="drag-handle">⠿</span>
       <div class="ex-num">01</div>
       <div class="ex-info">
-        <div class="ex-name">Crucifixo inclinado</div>
-        <div class="ex-sets-badge">3 séries</div>
+        <div class="ex-name">Caminhada acelerada ou bike leve na Zona 2 (40 min)</div>
+        <div class="ex-sets-badge">1 séries</div>
       </div>
-      <input class="ex-edit-input" value="Crucifixo inclinado" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[0].nome=this.value">
+      <input class="ex-edit-input" value="Caminhada acelerada ou bike leve na Zona 2 (40 min)" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[0].nome=this.value">
       <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
+        <input class="sets-n-input" type="number" min="1" max="10" value="1" oninput="treinos['D'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
       </div>
       <div class="carga-wrap">
         <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',0,0,this.value)">
       </div>
       <button class="del-ex-btn" onclick="deleteEx('D',0,0)">×</button>
       <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">02</div>
-      <div class="ex-info">
-        <div class="ex-name">Crossover no cabo</div>
-        <div class="ex-sets-badge">4 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Crossover no cabo" placeholder="Nome..." oninput="treinos['D'].grupos[0].exercicios[1].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['D'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',0,1,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('D',0,1)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
       <div class="add-ex-row">
         <input class="add-ex-input" id="addinput-D-0" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('D',0)">
         <button class="add-ex-btn" onclick="addEx('D',0)">+</button>
-      </div></div><div class="group-block" data-gi="1">
-      <div class="group-header">
-        <span class="section-label">— Ombro</span>
-        <input class="group-name-input" value="Ombro" placeholder="Nome do grupo..." oninput="treinos['D'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('D',1)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-D-1"><div class="exercise-item" data-idx="2" data-gi="1" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">03</div>
-      <div class="ex-info">
-        <div class="ex-name">Elevação lateral (variação)</div>
-        <div class="ex-sets-badge">5 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Elevação lateral (variação)" placeholder="Nome..." oninput="treinos['D'].grupos[1].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['D'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',1,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('D',1,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="3" data-gi="1" data-ei="1" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">04</div>
-      <div class="ex-info">
-        <div class="ex-name">Facepull</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Facepull" placeholder="Nome..." oninput="treinos['D'].grupos[1].exercicios[1].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',1,1,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('D',1,1)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-D-1" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('D',1)">
-        <button class="add-ex-btn" onclick="addEx('D',1)">+</button>
-      </div></div><div class="group-block" data-gi="2">
-      <div class="group-header">
-        <span class="section-label">— Tríceps</span>
-        <input class="group-name-input" value="Tríceps" placeholder="Nome do grupo..." oninput="treinos['D'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('D',2)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-D-2"><div class="exercise-item" data-idx="4" data-gi="2" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">05</div>
-      <div class="ex-info">
-        <div class="ex-name">Francês unilateral acima da cabeça (cabeça longa)</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Francês unilateral acima da cabeça (cabeça longa)" placeholder="Nome..." oninput="treinos['D'].grupos[2].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',2,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('D',2,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="5" data-gi="2" data-ei="1" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">06</div>
-      <div class="ex-info">
-        <div class="ex-name">Extensão corda no cabo (lateral/medial)</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Extensão corda no cabo (lateral/medial)" placeholder="Nome..." oninput="treinos['D'].grupos[2].exercicios[1].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['D'].grupos[2].exercicios[1].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('D',2,1,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('D',2,1)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-D-2" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('D',2)">
-        <button class="add-ex-btn" onclick="addEx('D',2)">+</button>
       </div></div></div>
     <div class="add-group-row"><button class="add-group-btn" onclick="addGroup('D')">+ Adicionar grupo muscular</button></div>
     <div class="congrats " id="congrats-D">
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
-    </div></div><div class="treino-panel edit-mode" id="panel-E">
-    <div class="treino-header">
-      <div class="treino-label">Costas + Bíceps + Abdômen</div>
-        <input class="treino-title-input" value="PULL B — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['E'].label=this.value;document.querySelector('#panel-E .treino-label').textContent=shortDesc(this.value)">
-      <div class="header-btns">
-        <button class="start-btn" id="start-E" onclick="startSession('E')">▶ Iniciar treino</button>
-        <div class="progress-pill" id="pill-E">0/6</div>
-        <button class="reset-btn" onclick="resetTreino('E')">↺</button>
-      </div>
-    </div>
-    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-E" style="width:0%"></div></div>
-    <div id="groups-E"><div class="group-block" data-gi="0">
-      <div class="group-header">
-        <span class="section-label">— Costas</span>
-        <input class="group-name-input" value="Costas" placeholder="Nome do grupo..." oninput="treinos['E'].grupos[0].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('E',0)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-E-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">01</div>
-      <div class="ex-info">
-        <div class="ex-name">Puxada aberta</div>
-        <div class="ex-sets-badge">4 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Puxada aberta" placeholder="Nome..." oninput="treinos['E'].grupos[0].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',0,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('E',0,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">02</div>
-      <div class="ex-info">
-        <div class="ex-name">Remada triângulo baixa</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Remada triângulo baixa" placeholder="Nome..." oninput="treinos['E'].grupos[0].exercicios[1].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',0,1,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('E',0,1)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
     </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-E-0" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('E',0)">
-        <button class="add-ex-btn" onclick="addEx('E',0)">+</button>
-      </div></div><div class="group-block" data-gi="1">
-      <div class="group-header">
-        <span class="section-label">— Bíceps</span>
-        <input class="group-name-input" value="Bíceps" placeholder="Nome do grupo..." oninput="treinos['E'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('E',1)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-E-1"><div class="exercise-item" data-idx="2" data-gi="1" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">03</div>
-      <div class="ex-info">
-        <div class="ex-name">Barra W (longa + curta)</div>
-        <div class="ex-sets-badge">4 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Barra W (longa + curta)" placeholder="Nome..." oninput="treinos['E'].grupos[1].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['E'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',1,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('E',1,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="3" data-gi="1" data-ei="1" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">04</div>
-      <div class="ex-info">
-        <div class="ex-name">Rosca inclinada halter, banco 45° (cabeça longa)</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Rosca inclinada halter, banco 45° (cabeça longa)" placeholder="Nome..." oninput="treinos['E'].grupos[1].exercicios[1].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[1].exercicios[1].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',1,1,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('E',1,1)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="4" data-gi="1" data-ei="2" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">05</div>
-      <div class="ex-info">
-        <div class="ex-name">Rosca invertida (antebraço)</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Rosca invertida (antebraço)" placeholder="Nome..." oninput="treinos['E'].grupos[1].exercicios[2].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['E'].grupos[1].exercicios[2].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',1,2,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('E',1,2)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-E-1" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('E',1)">
-        <button class="add-ex-btn" onclick="addEx('E',1)">+</button>
-      </div></div><div class="group-block" data-gi="2">
-      <div class="group-header">
-        <span class="section-label">— Abdômen</span>
-        <input class="group-name-input" value="Abdômen" placeholder="Nome do grupo..." oninput="treinos['E'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('E',2)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-E-2"><div class="exercise-item" data-idx="5" data-gi="2" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">06</div>
-      <div class="ex-info">
-        <div class="ex-name">Abdominal</div>
-        <div class="ex-sets-badge">8 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Abdominal" placeholder="Nome..." oninput="treinos['E'].grupos[2].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="8" oninput="treinos['E'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('E',2,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('E',2,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-E-2" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('E',2)">
-        <button class="add-ex-btn" onclick="addEx('E',2)">+</button>
-      </div></div></div>
-    <div class="add-group-row"><button class="add-group-btn" onclick="addGroup('E')">+ Adicionar grupo muscular</button></div>
-    <div class="congrats " id="congrats-E">
-      <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
-    </div></div><div class="treino-panel edit-mode" id="panel-F">
-    <div class="treino-header">
-      <div class="treino-label">Posterior + Quadríceps + Panturrilha</div>
-        <input class="treino-title-input" value="LEGS B — Posterior + Quadríceps + Panturrilha" placeholder="Nome..." oninput="treinos['F'].label=this.value;document.querySelector('#panel-F .treino-label').textContent=shortDesc(this.value)">
-      <div class="header-btns">
-        <button class="start-btn" id="start-F" onclick="startSession('F')">▶ Iniciar treino</button>
-        <div class="progress-pill" id="pill-F">0/5</div>
-        <button class="reset-btn" onclick="resetTreino('F')">↺</button>
-      </div>
-    </div>
-    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bar-F" style="width:0%"></div></div>
-    <div id="groups-F"><div class="group-block" data-gi="0">
-      <div class="group-header">
-        <span class="section-label">— Posterior de coxa</span>
-        <input class="group-name-input" value="Posterior de coxa" placeholder="Nome do grupo..." oninput="treinos['F'].grupos[0].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('F',0)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-F-0"><div class="exercise-item" data-idx="0" data-gi="0" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">01</div>
-      <div class="ex-info">
-        <div class="ex-name">Stiff/RDL (carga pesada)</div>
-        <div class="ex-sets-badge">4 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Stiff/RDL (carga pesada)" placeholder="Nome..." oninput="treinos['F'].grupos[0].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['F'].grupos[0].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',0,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('F',0,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="1" data-gi="0" data-ei="1" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">02</div>
-      <div class="ex-info">
-        <div class="ex-name">Hiperextensão</div>
-        <div class="ex-sets-badge">4 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Hiperextensão" placeholder="Nome..." oninput="treinos['F'].grupos[0].exercicios[1].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="4" oninput="treinos['F'].grupos[0].exercicios[1].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',0,1,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('F',0,1)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div><div class="exercise-item" data-idx="2" data-gi="0" data-ei="2" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">03</div>
-      <div class="ex-info">
-        <div class="ex-name">Hamstring curl</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Hamstring curl" placeholder="Nome..." oninput="treinos['F'].grupos[0].exercicios[2].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[0].exercicios[2].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',0,2,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('F',0,2)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-F-0" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('F',0)">
-        <button class="add-ex-btn" onclick="addEx('F',0)">+</button>
-      </div></div><div class="group-block" data-gi="1">
-      <div class="group-header">
-        <span class="section-label">— Quadríceps</span>
-        <input class="group-name-input" value="Quadríceps" placeholder="Nome do grupo..." oninput="treinos['F'].grupos[1].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('F',1)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-F-1"><div class="exercise-item" data-idx="3" data-gi="1" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">04</div>
-      <div class="ex-info">
-        <div class="ex-name">Leg press (carga moderada)</div>
-        <div class="ex-sets-badge">3 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Leg press (carga moderada)" placeholder="Nome..." oninput="treinos['F'].grupos[1].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="3" oninput="treinos['F'].grupos[1].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',1,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('F',1,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-F-1" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('F',1)">
-        <button class="add-ex-btn" onclick="addEx('F',1)">+</button>
-      </div></div><div class="group-block" data-gi="2">
-      <div class="group-header">
-        <span class="section-label">— Panturrilha</span>
-        <input class="group-name-input" value="Panturrilha" placeholder="Nome do grupo..." oninput="treinos['F'].grupos[2].nome=this.value;this.previousElementSibling.textContent='— '+this.value">
-        <button class="del-group-btn" onclick="deleteGroup('F',2)">✕ Remover</button>
-      </div>
-      <div class="exercise-list" id="exlist-F-2"><div class="exercise-item" data-idx="4" data-gi="2" data-ei="0" draggable="false">
-    <div class="ex-row">
-      <span class="drag-handle">⠿</span>
-      <div class="ex-num">05</div>
-      <div class="ex-info">
-        <div class="ex-name">Panturrilha sentada (pausa no alongamento)</div>
-        <div class="ex-sets-badge">5 séries</div>
-      </div>
-      <input class="ex-edit-input" value="Panturrilha sentada (pausa no alongamento)" placeholder="Nome..." oninput="treinos['F'].grupos[2].exercicios[0].nome=this.value">
-      <div class="sets-edit-wrap">
-        <input class="sets-n-input" type="number" min="1" max="10" value="5" oninput="treinos['F'].grupos[2].exercicios[0].series=parseInt(this.value)||3">
-      </div>
-      <div class="carga-wrap">
-        <input class="carga-input" type="number" inputmode="decimal" step="0.5" placeholder="kg" value="" onchange="updateCarga('F',2,0,this.value)">
-      </div>
-      <button class="del-ex-btn" onclick="deleteEx('F',2,0)">×</button>
-      <div class="check-circle" title="Marcar como concluído"></div>
-    </div></div></div>
-      <div class="add-ex-row">
-        <input class="add-ex-input" id="addinput-F-2" placeholder="Novo exercício..." onkeydown="if(event.key==='Enter')addEx('F',2)">
-        <button class="add-ex-btn" onclick="addEx('F',2)">+</button>
-      </div></div></div>
-    <div class="add-group-row"><button class="add-group-btn" onclick="addGroup('F')">+ Adicionar grupo muscular</button></div>
-    <div class="congrats " id="congrats-F">
-      <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
-    </div></div></div>
-
 <script>
-const TREINOS_DATA = {"A":{"label":"PUSH A — Peito + Ombro + Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Supino inclinado barra","series":4,"reps":8},{"nome":"Supino halter plano","series":4,"reps":10}]},{"nome":"Ombro","exercicios":[{"nome":"Shoulder press","series":4,"reps":10},{"nome":"Elevação lateral","series":5,"reps":15}]},{"nome":"Tríceps","exercicios":[{"nome":"Dip (tronco ereto, foco tríceps)","series":3,"reps":10},{"nome":"Francês halter acima da cabeça (cabeça longa)","series":3,"reps":12}]}]},"B":{"label":"PULL A — Costas + Bíceps + Abdômen","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada aberta supinada","series":4,"reps":10},{"nome":"Remada unilateral halter","series":3,"reps":10},{"nome":"Pullover na polia em pé","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Preacher máquina (cabeça curta)","series":4,"reps":10},{"nome":"Rosca martelo (braquial)","series":3,"reps":12}]},{"nome":"Abdômen","exercicios":[{"nome":"Abdominal","series":8,"reps":12}]}]},"C":{"label":"LEGS A — Quadríceps + Posterior + Panturrilha","grupos":[{"nome":"Quadríceps","exercicios":[{"nome":"Agachamento búlgaro","series":4,"reps":10},{"nome":"Leg press","series":4,"reps":10},{"nome":"Extensão na cadeira","series":3,"reps":12}]},{"nome":"Posterior de coxa","exercicios":[{"nome":"Stiff/RDL (carga moderada)","series":3,"reps":10}]},{"nome":"Panturrilha","exercicios":[{"nome":"Panturrilha em pé (pausa no alongamento)","series":5,"reps":15}]}]},"D":{"label":"PUSH B — Peito + Ombro + Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Crucifixo inclinado","series":3,"reps":12},{"nome":"Crossover no cabo","series":4,"reps":15}]},{"nome":"Ombro","exercicios":[{"nome":"Elevação lateral (variação)","series":5,"reps":15},{"nome":"Facepull","series":3,"reps":15}]},{"nome":"Tríceps","exercicios":[{"nome":"Francês unilateral acima da cabeça (cabeça longa)","series":3,"reps":12},{"nome":"Extensão corda no cabo (lateral/medial)","series":3,"reps":12}]}]},"E":{"label":"PULL B — Costas + Bíceps + Abdômen","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada aberta","series":4,"reps":10},{"nome":"Remada triângulo baixa","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Barra W (longa + curta)","series":4,"reps":10},{"nome":"Rosca inclinada halter, banco 45° (cabeça longa)","series":3,"reps":10},{"nome":"Rosca invertida (antebraço)","series":3,"reps":12}]},{"nome":"Abdômen","exercicios":[{"nome":"Abdominal","series":8,"reps":12}]}]},"F":{"label":"LEGS B — Posterior + Quadríceps + Panturrilha","grupos":[{"nome":"Posterior de coxa","exercicios":[{"nome":"Stiff/RDL (carga pesada)","series":4,"reps":8},{"nome":"Hiperextensão","series":4,"reps":12},{"nome":"Hamstring curl","series":3,"reps":12}]},{"nome":"Quadríceps","exercicios":[{"nome":"Leg press (carga moderada)","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Panturrilha sentada (pausa no alongamento)","series":5,"reps":15}]}]}};
+const TREINOS_DATA = {"A":{"label":"PUSH — Peito, Ombros e Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Supino inclinado com halteres","series":4,"reps":8},{"nome":"Crucifixo inclinado (halteres/cabo)","series":3,"reps":10},{"nome":"Crucifixo no cabo alto","series":3,"reps":12}]},{"nome":"Ombro","exercicios":[{"nome":"Desenvolvimento com halteres","series":3,"reps":8},{"nome":"Elevação frontal na polia baixa","series":3,"reps":12},{"nome":"Elevação lateral no cabo","series":4,"reps":12}]},{"nome":"Tríceps","exercicios":[{"nome":"Tríceps francês (cabo/halter)","series":3,"reps":10},{"nome":"Tríceps pulley (barra reta ou V)","series":3,"reps":10},{"nome":"Tríceps corda","series":3,"reps":12}]}]},"B":{"label":"PULL — Costas, Trapézio, Lombar e Bíceps","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada alta pronada (aberta)","series":4,"reps":8},{"nome":"Puxada supinada (inversa)","series":3,"reps":10},{"nome":"Remada curvada com barra","series":4,"reps":8}]},{"nome":"Trapézio e Lombar","exercicios":[{"nome":"Remada alta na pegada aberta","series":3,"reps":12},{"nome":"Encolhimento com halteres/barra (segurar 2s)","series":4,"reps":12},{"nome":"Extensão lombar (banco romano)","series":3,"reps":12},{"nome":"Crucifixo invertido (cabo/halter)","series":4,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Rosca inclinada com halteres (banco 45°)","series":3,"reps":10},{"nome":"Rosca Scott (barra W)","series":3,"reps":10},{"nome":"Rosca martelo com halteres","series":3,"reps":12},{"nome":"Rosca inversa (barra W)","series":3,"reps":15}]}]},"C":{"label":"LEGS & CORE — Pernas e Abdômen","grupos":[{"nome":"Quadríceps","exercicios":[{"nome":"Agachamento livre (barra)","series":4,"reps":8},{"nome":"Leg press 45° (pés baixos)","series":3,"reps":10},{"nome":"Cadeira extensora (drop-set na última série)","series":3,"reps":12}]},{"nome":"Posterior e Glúteos","exercicios":[{"nome":"Stiff com barra ou halteres","series":4,"reps":8},{"nome":"Mesa ou cadeira flexora","series":3,"reps":10},{"nome":"Elevação pélvica","series":3,"reps":10}]},{"nome":"Adutores e Abdutores","exercicios":[{"nome":"Cadeira abdutora (tronco à frente)","series":3,"reps":15},{"nome":"Cadeira adutora","series":3,"reps":15}]},{"nome":"Panturrilha","exercicios":[{"nome":"Gêmeos em pé","series":4,"reps":12},{"nome":"Gêmeos sentado (cavalo)","series":4,"reps":15}]},{"nome":"Abdômen","exercicios":[{"nome":"Abdominal infra (suspenso)","series":4,"reps":15},{"nome":"Abdominal supra na polia alta","series":4,"reps":12},{"nome":"Abdominal oblíquo no cabo","series":3,"reps":12}]}]},"D":{"label":"CARDIO — Recuperação Ativa (dia de folga)","grupos":[{"nome":"Cardio LISS","exercicios":[{"nome":"Caminhada acelerada ou bike leve na Zona 2 (40 min)","series":1,"reps":1}]}]}};
 
 const STORAGE_KEY='treinos_saved';
 const CARGAS_KEY='cargas_saved';

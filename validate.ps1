@@ -21,7 +21,7 @@ if ($open -eq $close) { Pass "Divs balanceados ($open abertos, $close fechados)"
 else                   { Fail "Divs desbalanceados: $open abertos vs $close fechados" }
 
 # 2. IDs obrigatorios
-$ids = @('id="panels"','id="tabs"','id="panel-A"','id="panel-B"','id="panel-C"','id="panel-D"','id="panel-E"','id="panel-F"')
+$ids = @('id="panels"','id="tabs"','id="panel-A"','id="panel-B"','id="panel-C"','id="panel-D"')
 foreach ($id in $ids) {
     if ($html.Contains($id)) { Pass "Elemento presente: $id" }
     else                      { Fail "Elemento ausente:  $id" }
