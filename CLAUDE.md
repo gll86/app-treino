@@ -87,11 +87,17 @@ sessoes["2026-07-29"]   // {duracaoMin, fcMedia, fcMax, calorias, stravaId}
   drag-and-drop (mouse e touch), adicionar/remover exercícios e grupos.
 - Botão "✅ Salvar alterações" salva edições no localStorage e no Firebase.
 - Header compacto: só título, data e um botão "☰" que abre um menu suspenso
-  (canto superior direito) com "✏️ Editar", "☁ Entrar" e "🔗 Strava" — evita quebra
-  de layout em telas estreitas (o menu fecha ao clicar fora ou em qualquer opção).
+  (canto superior direito), sempre nesta ordem: "☁ Entrar", "✏️ Editar",
+  "📊 Histórico", "🔗 Strava" — evita quebra de layout em telas estreitas (o
+  menu fecha ao clicar fora ou em qualquer opção).
 - "☁ Entrar": login com Google via popup; quando logado mostra o nome do usuário e
   sincroniza treinos, cargas, histórico e sessões do Firebase automaticamente.
-- "🔗 Strava": só aparece logado no Google. Inicia OAuth com o Strava pra permitir a
+- "📊 Histórico": abre tela cheia com evolução de carga por exercício (gráfico
+  SVG) e sessões sincronizadas do Strava, filtráveis por período — ver detalhes
+  no código (`openHistorico`/`buildHistorico` no `<script>`).
+- "🔗 Strava": sempre visível no menu (não depende de login), mas exige login
+  no Google antes de iniciar o OAuth — clicar sem estar logado mostra um alerta
+  pedindo pra entrar primeiro. Inicia OAuth com o Strava pra permitir a
   sincronização noturna de dados do Garmin — ver "Integração Garmin → Strava".
 
 ## Integração Garmin → Strava

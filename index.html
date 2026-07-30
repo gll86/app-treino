@@ -150,7 +150,38 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .congrats p{color:var(--muted);font-size:0.84rem}
 @keyframes popIn{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
 
-
+#historico-screen{display:none;position:fixed;inset:0;z-index:300;background:var(--bg);overflow-y:auto}
+#historico-screen.show{display:block}
+.hist-header{position:sticky;top:0;background:var(--card);border-bottom:2px solid var(--accent);padding:12px 14px;z-index:1}
+.back-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:7px 13px;font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;cursor:pointer}
+.back-btn:hover{border-color:var(--accent);color:var(--accent)}
+.hist-tabs{display:flex;gap:5px;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--border)}
+.hist-tab-btn{flex:1;background:var(--card2);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all .15s}
+.hist-tab-btn.active{background:var(--accent);color:#111;border-color:var(--accent)}
+.hist-filtros{display:flex;gap:6px;padding:10px 12px}
+.filtro-btn{background:var(--card2);color:var(--muted);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-family:'DM Sans',sans-serif;font-size:0.76rem;cursor:pointer;transition:all .15s}
+.filtro-btn.active{border-color:var(--accent);color:var(--accent)}
+.hist-empty{color:var(--muted);font-size:0.84rem;padding:24px 20px;text-align:center}
+.hist-treino-group{padding:0 12px 16px}
+.hist-treino-group h3{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:1px;color:var(--accent);margin:14px 0 6px}
+.hist-ex-row{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;overflow:hidden}
+.hist-ex-summary{padding:11px 13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hist-ex-nome{font-size:0.84rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-ex-ultimo{font-size:0.76rem;color:var(--muted);white-space:nowrap}
+.hist-ex-body{display:none;padding:4px 13px 13px}
+.hist-ex-row.open .hist-ex-body{display:block}
+.hist-chart-svg{width:100%;height:auto;display:block}
+.hist-chart-svg .grid-line{stroke:var(--border);stroke-width:1}
+.hist-chart-svg .grid-label{fill:var(--muted);font-size:8px}
+.hist-chart-svg .chart-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hist-chart-svg .chart-dot{fill:var(--accent)}
+.hist-chart-svg .axis-label{fill:var(--muted);font-size:8px}
+.hist-chart-svg .value-label{fill:var(--text);font-size:9px;font-weight:700}
+.hist-chart-list{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:0.72rem;color:var(--muted)}
+.sessao-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin:0 12px 6px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:0.8rem}
+.sessao-data{display:flex;flex-direction:column;gap:2px}
+.sessao-treino-tag{font-family:'Bebas Neue',sans-serif;font-size:0.72rem;letter-spacing:1px;color:var(--accent)}
+.sessao-metricas{color:var(--muted);font-size:0.76rem;text-align:right}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -163,9 +194,10 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
   <span id="today-date">QUA., 27/05</span>
   <button class="hdr-btn menu-btn" id="menu-toggle" onclick="toggleHdrMenu()">☰</button>
   <div id="hdr-menu">
-    <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
     <button class="hdr-btn" id="auth-btn" onclick="handleAuth()">☁ Entrar</button>
-    <button class="hdr-btn" id="strava-btn" onclick="handleStrava()" style="display:none">🔗 Strava</button>
+    <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
+    <button class="hdr-btn" id="historico-toggle" onclick="openHistorico()">📊 Histórico</button>
+    <button class="hdr-btn" id="strava-btn" onclick="handleStrava()">🔗 Strava</button>
   </div>
 </header>
 <div id="edit-banner">
@@ -893,6 +925,22 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
     <div class="congrats " id="congrats-D">
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div></div>
+<div id="historico-screen">
+  <div class="hist-header">
+    <button class="back-btn" onclick="closeHistorico()">← Histórico</button>
+  </div>
+  <div class="hist-tabs">
+    <button class="hist-tab-btn active" data-tab="evolucao" onclick="switchHistTab('evolucao')">Evolução</button>
+    <button class="hist-tab-btn" data-tab="sessoes" onclick="switchHistTab('sessoes')">Sessões</button>
+  </div>
+  <div class="hist-filtros">
+    <button class="filtro-btn active" data-dias="30" onclick="setHistPeriodo(30)">30 dias</button>
+    <button class="filtro-btn" data-dias="90" onclick="setHistPeriodo(90)">90 dias</button>
+    <button class="filtro-btn" data-dias="0" onclick="setHistPeriodo(0)">Tudo</button>
+  </div>
+  <div id="hist-evolucao-panel"></div>
+  <div id="hist-sessoes-panel" style="display:none"></div>
+</div>
 <script>
 const TREINOS_DATA = {"A":{"label":"PUSH — Peito, Ombros e Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Supino inclinado com halteres","series":4,"reps":8},{"nome":"Crucifixo inclinado (halteres/cabo)","series":3,"reps":10},{"nome":"Crucifixo no cabo alto","series":3,"reps":12}]},{"nome":"Ombro","exercicios":[{"nome":"Desenvolvimento com halteres","series":3,"reps":8},{"nome":"Elevação frontal na polia baixa","series":3,"reps":12},{"nome":"Elevação lateral no cabo","series":4,"reps":12}]},{"nome":"Tríceps","exercicios":[{"nome":"Tríceps francês (cabo/halter)","series":3,"reps":10},{"nome":"Tríceps pulley (barra reta ou V)","series":3,"reps":10},{"nome":"Tríceps corda","series":3,"reps":12}]}]},"B":{"label":"PULL — Costas, Trapézio, Lombar e Bíceps","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada alta pronada (aberta)","series":4,"reps":8},{"nome":"Puxada supinada (inversa)","series":3,"reps":10},{"nome":"Remada curvada com barra","series":4,"reps":8}]},{"nome":"Trapézio e Lombar","exercicios":[{"nome":"Remada alta na pegada aberta","series":3,"reps":12},{"nome":"Encolhimento com halteres/barra (segurar 2s)","series":4,"reps":12},{"nome":"Extensão lombar (banco romano)","series":3,"reps":12},{"nome":"Crucifixo invertido (cabo/halter)","series":4,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Rosca inclinada com halteres (banco 45°)","series":3,"reps":10},{"nome":"Rosca Scott (barra W)","series":3,"reps":10},{"nome":"Rosca martelo com halteres","series":3,"reps":12},{"nome":"Rosca inversa (barra W)","series":3,"reps":15}]}]},"C":{"label":"LEGS & CORE — Pernas e Abdômen","grupos":[{"nome":"Quadríceps","exercicios":[{"nome":"Agachamento livre (barra)","series":4,"reps":8},{"nome":"Leg press 45° (pés baixos)","series":3,"reps":10},{"nome":"Cadeira extensora (drop-set na última série)","series":3,"reps":12}]},{"nome":"Posterior e Glúteos","exercicios":[{"nome":"Stiff com barra ou halteres","series":4,"reps":8},{"nome":"Mesa ou cadeira flexora","series":3,"reps":10},{"nome":"Elevação pélvica","series":3,"reps":10}]},{"nome":"Adutores e Abdutores","exercicios":[{"nome":"Cadeira abdutora (tronco à frente)","series":3,"reps":15},{"nome":"Cadeira adutora","series":3,"reps":15}]},{"nome":"Panturrilha","exercicios":[{"nome":"Gêmeos em pé","series":4,"reps":12},{"nome":"Gêmeos sentado (cavalo)","series":4,"reps":15}]},{"nome":"Abdômen","exercicios":[{"nome":"Abdominal infra (suspenso)","series":4,"reps":15},{"nome":"Abdominal supra na polia alta","series":4,"reps":12},{"nome":"Abdominal oblíquo no cabo","series":3,"reps":12}]}]},"D":{"label":"CARDIO — Recuperação Ativa (dia de folga)","grupos":[{"nome":"Cardio LISS","exercicios":[{"nome":"Caminhada acelerada ou bike leve na Zona 2 (40 min)","series":1,"reps":1}]}]}};
 
@@ -960,6 +1008,7 @@ const STRAVA_CLIENT_ID='268633';
 const STRAVA_API_BASE='https://app-treino-gll3.vercel.app';
 
 function handleStrava(){
+  if(!currentUser){alert('Entre com sua conta Google antes de conectar o Strava.');return;}
   const redirectUri=encodeURIComponent(location.origin+location.pathname);
   location.href=`https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&approval_prompt=auto&scope=activity:read_all`;
 }
@@ -991,7 +1040,6 @@ function updateAuthUI(){
     btn.textContent='☁ Entrar';btn.title='';btn.classList.remove('active');
   }
   const sbtn=document.getElementById('strava-btn');if(!sbtn)return;
-  sbtn.style.display=currentUser?'':'none';
   const connected=localStorage.getItem('strava_connected')==='1';
   sbtn.textContent=connected?'🔗 Strava ✓':'🔗 Strava';
   sbtn.classList.toggle('active',connected);
@@ -1231,6 +1279,143 @@ document.addEventListener('click',(e)=>{
   const menu=document.getElementById('hdr-menu'),btn=document.getElementById('menu-toggle');
   if(menu&&menu.classList.contains('show')&&!menu.contains(e.target)&&e.target!==btn)menu.classList.remove('show');
 });
+
+// ── HISTÓRICO ─────────────────────────────────────────────────────────
+let histPeriodoDias=30,histTabAtiva='evolucao';
+
+function openHistorico(){
+  document.getElementById('hdr-menu').classList.remove('show');
+  buildHistorico();
+  document.getElementById('historico-screen').classList.add('show');
+}
+function closeHistorico(){document.getElementById('historico-screen').classList.remove('show');}
+
+function switchHistTab(tab){
+  histTabAtiva=tab;
+  document.querySelectorAll('.hist-tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.getElementById('hist-evolucao-panel').style.display=tab==='evolucao'?'':'none';
+  document.getElementById('hist-sessoes-panel').style.display=tab==='sessoes'?'':'none';
+}
+
+function setHistPeriodo(dias){
+  histPeriodoDias=dias;
+  document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.dias,10)===dias));
+  buildHistorico();
+}
+
+function cutoffDate(){
+  if(!histPeriodoDias)return null;
+  const d=new Date();d.setDate(d.getDate()-histPeriodoDias);
+  return d.toISOString().slice(0,10);
+}
+
+function formatDataBR(iso){const[y,m,d]=iso.split('-');return `${d}/${m}`;}
+
+function buildHistorico(){buildEvolucaoPanel();buildSessoesPanel();}
+
+function buildEvolucaoPanel(){
+  const el=document.getElementById('hist-evolucao-panel');
+  const cutoff=cutoffDate();
+  const keys=Object.keys(historico);
+  if(!keys.length){el.innerHTML='<div class="hist-empty">Ainda sem histórico de carga. Continue registrando pesos nos treinos.</div>';return;}
+  let html='',temLinha=false;
+  keys.forEach(key=>{
+    const exs=Object.keys(historico[key]||{});
+    if(!exs.length)return;
+    const label=(treinos[key]?.label||key).split(' — ')[0];
+    let grupoHtml='';
+    exs.forEach((nome,ei)=>{
+      const pontos=(historico[key][nome]||[]).filter(p=>!cutoff||p.data>=cutoff).sort((a,b)=>a.data<b.data?-1:1);
+      if(!pontos.length)return;
+      temLinha=true;
+      const ultimo=pontos[pontos.length-1].carga,primeiro=pontos[0].carga,delta=ultimo-primeiro;
+      const deltaTxt=pontos.length>1?` (${delta>=0?'+':''}${delta}kg no período)`:'';
+      const rowId=`hist-ex-${key}-${ei}`;
+      grupoHtml+=`
+      <div class="hist-ex-row" id="${rowId}">
+        <div class="hist-ex-summary" onclick="toggleHistEx('${rowId}')">
+          <div class="hist-ex-nome">${esc(nome)}</div>
+          <div class="hist-ex-ultimo">${ultimo}kg${deltaTxt}</div>
+        </div>
+        <div class="hist-ex-body" data-key="${esc(key)}" data-nome="${esc(nome)}"></div>
+      </div>`;
+    });
+    if(grupoHtml)html+=`<div class="hist-treino-group"><h3>${esc(label)}</h3>${grupoHtml}</div>`;
+  });
+  el.innerHTML=temLinha?html:'<div class="hist-empty">Nenhum registro de carga nesse período.</div>';
+}
+
+function toggleHistEx(rowId){
+  const row=document.getElementById(rowId);if(!row)return;
+  if(row.classList.contains('open')){row.classList.remove('open');return;}
+  row.classList.add('open');
+  const body=row.querySelector('.hist-ex-body');
+  if(!body.dataset.built){
+    const key=body.dataset.key,nome=body.dataset.nome,cutoff=cutoffDate();
+    const pontos=(historico[key]?.[nome]||[]).filter(p=>!cutoff||p.data>=cutoff).sort((a,b)=>a.data<b.data?-1:1);
+    body.innerHTML=buildSvgChart(pontos);
+    body.dataset.built='1';
+  }
+}
+
+function buildSvgChart(pontos){
+  if(pontos.length===1)return `<div class="hist-empty" style="padding:12px 0">Só um registro nesse período: ${pontos[0].carga}kg em ${formatDataBR(pontos[0].data)}.</div>`;
+  if(pontos.length<1)return '<div class="hist-empty" style="padding:12px 0">Dados insuficientes nesse período.</div>';
+  const W=300,H=110,padL=30,padR=10,padT=10,padB=20;
+  const cargas=pontos.map(p=>p.carga);
+  let min=Math.min(...cargas),max=Math.max(...cargas);
+  if(min===max){min-=1;max+=1;}
+  const x=i=>padL+(i/(pontos.length-1))*(W-padL-padR);
+  const y=v=>padT+(1-(v-min)/(max-min))*(H-padT-padB);
+  let svg=`<svg class="hist-chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet">`;
+  [min,(min+max)/2,max].forEach(v=>{
+    const gy=y(v);
+    svg+=`<line class="grid-line" x1="${padL}" y1="${gy.toFixed(1)}" x2="${W-padR}" y2="${gy.toFixed(1)}"/>`;
+    svg+=`<text class="grid-label" x="${padL-5}" y="${(gy+3).toFixed(1)}" text-anchor="end">${Math.round(v)}</text>`;
+  });
+  const linePts=pontos.map((p,i)=>`${x(i).toFixed(1)},${y(p.carga).toFixed(1)}`).join(' ');
+  svg+=`<polyline class="chart-line" points="${linePts}"/>`;
+  pontos.forEach((p,i)=>{
+    svg+=`<circle class="chart-dot" cx="${x(i).toFixed(1)}" cy="${y(p.carga).toFixed(1)}" r="${i===pontos.length-1?4:3}"/>`;
+  });
+  const lastX=x(pontos.length-1),lastY=y(pontos[pontos.length-1].carga);
+  svg+=`<text class="value-label" x="${lastX.toFixed(1)}" y="${(lastY-8).toFixed(1)}" text-anchor="end">${pontos[pontos.length-1].carga}kg</text>`;
+  svg+=`<text class="axis-label" x="${padL}" y="${H-6}">${formatDataBR(pontos[0].data)}</text>`;
+  svg+=`<text class="axis-label" x="${W-padR}" y="${H-6}" text-anchor="end">${formatDataBR(pontos[pontos.length-1].data)}</text>`;
+  svg+='</svg>';
+  const listHtml=pontos.map(p=>`<span>${formatDataBR(p.data)}: ${p.carga}kg</span>`).join('');
+  return svg+`<div class="hist-chart-list">${listHtml}</div>`;
+}
+
+function treinoDoDia(data){
+  for(const key of Object.keys(historico)){
+    const exs=historico[key];
+    for(const nome of Object.keys(exs)){
+      if((exs[nome]||[]).some(p=>p.data===data))return (treinos[key]?.label||key).split(' — ')[0];
+    }
+  }
+  return null;
+}
+
+function buildSessoesPanel(){
+  const el=document.getElementById('hist-sessoes-panel');
+  const todasDatas=Object.keys(sessoes);
+  if(!todasDatas.length){el.innerHTML='<div class="hist-empty">Nenhuma sessão sincronizada ainda. Conecte o Strava no menu ☰.</div>';return;}
+  const cutoff=cutoffDate();
+  const datas=todasDatas.filter(d=>!cutoff||d>=cutoff).sort((a,b)=>a<b?1:-1);
+  if(!datas.length){el.innerHTML='<div class="hist-empty">Nenhuma sessão nesse período.</div>';return;}
+  el.innerHTML=datas.map(d=>{
+    const s=sessoes[d],treino=treinoDoDia(d);
+    const metricas=[s.duracaoMin?`${s.duracaoMin}min`:null,s.fcMedia?`${s.fcMedia}bpm`:null,s.calorias?`${s.calorias}kcal`:null].filter(Boolean).join(' · ');
+    return `<div class="sessao-row">
+        <div class="sessao-data">
+          <span>${formatDataBR(d)}</span>
+          ${treino?`<span class="sessao-treino-tag">${esc(treino)}</span>`:''}
+        </div>
+        <div class="sessao-metricas">${metricas||'—'}</div>
+      </div>`;
+  }).join('');
+}
 
 // ── DRAG & DROP ───────────────────────────────────────────────────────
 function initDrag(listEl,key,gi){
