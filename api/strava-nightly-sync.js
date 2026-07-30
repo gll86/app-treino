@@ -16,9 +16,13 @@ const BR_OFFSET_MS = -3 * 3600 * 1000;
 function getYesterdayRangeBR() {
   const nowBR = new Date(Date.now() + BR_OFFSET_MS);
   const y = nowBR.getUTCFullYear(), m = nowBR.getUTCMonth(), d = nowBR.getUTCDate() - 1;
-  const startUTC = Date.UTC(y, m, d) - BR_OFFSET_MS;
+  return getRangeForDateBR(new Date(Date.UTC(y, m, d)).toISOString().slice(0, 10));
+}
+
+function getRangeForDateBR(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const startUTC = Date.UTC(y, m - 1, d) - BR_OFFSET_MS;
   const endUTC = startUTC + 24 * 3600 * 1000;
-  const dateStr = new Date(Date.UTC(y, m, d)).toISOString().slice(0, 10);
   return { after: Math.floor(startUTC / 1000), before: Math.floor(endUTC / 1000), dateStr };
 }
 
@@ -44,7 +48,9 @@ module.exports = async (req, res) => {
   }
 
   const db = getAdmin().database();
-  const { after, before, dateStr } = getYesterdayRangeBR();
+  const { after, before, dateStr } = (req.query && req.query.date)
+    ? getRangeForDateBR(req.query.date)
+    : getYesterdayRangeBR();
   const results = [];
 
   try {
@@ -69,6 +75,11 @@ module.exports = async (req, res) => {
       });
       const activities = await actRes.json();
       if (!Array.isArray(activities)) { results.push({ uid, error: 'activities fetch failed', detail: activities }); continue; }
+
+      if (req.query && req.query.debug === '1') {
+        results.push({ uid, debugActivities: activities.map(a => ({ name: a.name, type: a.type, sport_type: a.sport_type, start_date: a.start_date })) });
+        continue;
+      }
 
       const match = activities.find(a => a.type === 'WeightTraining' || a.sport_type === 'WeightTraining');
       if (!match) { results.push({ uid, found: false }); continue; }
