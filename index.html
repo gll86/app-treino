@@ -22,10 +22,14 @@
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:100px;overflow-x:hidden}
 
 header{background:var(--card);border-bottom:2px solid var(--accent);padding:12px 14px;position:sticky;top:0;z-index:200;display:flex;align-items:center;gap:8px}
-header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--accent);flex:1}
+header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:var(--accent);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #today-date{font-size:0.72rem;color:var(--muted);background:var(--card2);padding:3px 9px;border-radius:20px;border:1px solid var(--border);white-space:nowrap}
 .hdr-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:5px 11px;font-size:0.76rem;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;white-space:nowrap}
 .hdr-btn:hover,.hdr-btn.active{border-color:var(--accent);color:var(--accent);background:var(--edit-bg)}
+.menu-btn{font-size:0.95rem;padding:5px 10px;line-height:1}
+#hdr-menu{display:none;position:absolute;top:100%;right:14px;margin-top:6px;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:8px;flex-direction:column;gap:6px;z-index:250;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+#hdr-menu.show{display:flex}
+#hdr-menu .hdr-btn{width:100%;text-align:left}
 #edit-banner{display:none;background:var(--edit-bg);border-bottom:1px solid var(--edit-border);padding:8px 14px;gap:8px;align-items:center;flex-wrap:wrap}
 #edit-banner.show{display:flex}
 #edit-banner span{font-size:0.73rem;color:var(--accent);flex:1}
@@ -40,7 +44,7 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 .treino-panel.active{display:block}
 
 .treino-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
-.treino-label{font-size:0.88rem;font-weight:600;flex:1;min-width:0}
+.treino-label{font-size:0.76rem;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .edit-mode .treino-panel .treino-label{display:none}
 .treino-title-input{font-family:'DM Sans',sans-serif;font-size:0.86rem;font-weight:600;background:var(--card2);border:1px solid var(--edit-border);border-radius:8px;color:var(--text);padding:5px 10px;display:none;outline:none;flex:1}
 .treino-title-input:focus{border-color:var(--accent)}
@@ -156,10 +160,13 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 <header>
   <div>💪</div>
   <h1>MEU TREINO</h1>
-  <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
-  <button class="hdr-btn" id="auth-btn" onclick="handleAuth()">☁ Entrar</button>
-  <button class="hdr-btn" id="strava-btn" onclick="handleStrava()" style="display:none">🔗 Strava</button>
   <span id="today-date">QUA., 27/05</span>
+  <button class="hdr-btn menu-btn" id="menu-toggle" onclick="toggleHdrMenu()">☰</button>
+  <div id="hdr-menu">
+    <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
+    <button class="hdr-btn" id="auth-btn" onclick="handleAuth()">☁ Entrar</button>
+    <button class="hdr-btn" id="strava-btn" onclick="handleStrava()" style="display:none">🔗 Strava</button>
+  </div>
 </header>
 <div id="edit-banner">
   <span>✏️ Arraste ⠿ · edite nomes · defina séries×reps · × remove</span>
@@ -167,8 +174,8 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
 <div class="tabs" id="tabs"><button class="tab-btn active" id="tab-A" data-key="A">PUSH A</button><button class="tab-btn" id="tab-B" data-key="B">PULL A</button><button class="tab-btn" id="tab-C" data-key="C">LEGS A</button><button class="tab-btn" id="tab-D" data-key="D">PUSH B</button><button class="tab-btn" id="tab-E" data-key="E">PULL B</button><button class="tab-btn" id="tab-F" data-key="F">LEGS B</button></div>
 <div id="panels"><div class="treino-panel edit-mode active" id="panel-A">
     <div class="treino-header">
-      <div class="treino-label">PUSH A — Peito + Ombro + Tríceps</div>
-        <input class="treino-title-input" value="PUSH A — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-label').textContent=this.value">
+      <div class="treino-label">Peito + Ombro + Tríceps</div>
+        <input class="treino-title-input" value="PUSH A — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['A'].label=this.value;document.querySelector('#panel-A .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-A" onclick="startSession('A')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-A">0/6</div>
@@ -314,8 +321,8 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-B">
     <div class="treino-header">
-      <div class="treino-label">PULL A — Costas + Bíceps + Abdômen</div>
-        <input class="treino-title-input" value="PULL A — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-label').textContent=this.value">
+      <div class="treino-label">Costas + Bíceps + Abdômen</div>
+        <input class="treino-title-input" value="PULL A — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['B'].label=this.value;document.querySelector('#panel-B .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-B" onclick="startSession('B')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-B">0/6</div>
@@ -461,8 +468,8 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-C">
     <div class="treino-header">
-      <div class="treino-label">LEGS A — Quadríceps + Posterior + Panturrilha</div>
-        <input class="treino-title-input" value="LEGS A — Quadríceps + Posterior + Panturrilha" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-label').textContent=this.value">
+      <div class="treino-label">Quadríceps + Posterior + Panturrilha</div>
+        <input class="treino-title-input" value="LEGS A — Quadríceps + Posterior + Panturrilha" placeholder="Nome..." oninput="treinos['C'].label=this.value;document.querySelector('#panel-C .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-C" onclick="startSession('C')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-C">0/5</div>
@@ -591,8 +598,8 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-D">
     <div class="treino-header">
-      <div class="treino-label">PUSH B — Peito + Ombro + Tríceps</div>
-        <input class="treino-title-input" value="PUSH B — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-label').textContent=this.value">
+      <div class="treino-label">Peito + Ombro + Tríceps</div>
+        <input class="treino-title-input" value="PUSH B — Peito + Ombro + Tríceps" placeholder="Nome..." oninput="treinos['D'].label=this.value;document.querySelector('#panel-D .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-D" onclick="startSession('D')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-D">0/6</div>
@@ -738,8 +745,8 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-E">
     <div class="treino-header">
-      <div class="treino-label">PULL B — Costas + Bíceps + Abdômen</div>
-        <input class="treino-title-input" value="PULL B — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['E'].label=this.value;document.querySelector('#panel-E .treino-label').textContent=this.value">
+      <div class="treino-label">Costas + Bíceps + Abdômen</div>
+        <input class="treino-title-input" value="PULL B — Costas + Bíceps + Abdômen" placeholder="Nome..." oninput="treinos['E'].label=this.value;document.querySelector('#panel-E .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-E" onclick="startSession('E')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-E">0/6</div>
@@ -885,8 +892,8 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
       <div class="emoji">🏆</div><h2>TREINO CONCLUÍDO!</h2><p>Excelente trabalho! Cargas salvas.</p>
     </div></div><div class="treino-panel edit-mode" id="panel-F">
     <div class="treino-header">
-      <div class="treino-label">LEGS B — Posterior + Quadríceps + Panturrilha</div>
-        <input class="treino-title-input" value="LEGS B — Posterior + Quadríceps + Panturrilha" placeholder="Nome..." oninput="treinos['F'].label=this.value;document.querySelector('#panel-F .treino-label').textContent=this.value">
+      <div class="treino-label">Posterior + Quadríceps + Panturrilha</div>
+        <input class="treino-title-input" value="LEGS B — Posterior + Quadríceps + Panturrilha" placeholder="Nome..." oninput="treinos['F'].label=this.value;document.querySelector('#panel-F .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-F" onclick="startSession('F')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-F">0/5</div>
@@ -1069,7 +1076,7 @@ let currentUser=null;
 // ── STRAVA ────────────────────────────────────────────────────────────
 // preenchidos após o setup do app no Strava e o deploy das functions na Vercel
 const STRAVA_CLIENT_ID='268633';
-const STRAVA_API_BASE='https://app-treino-wine.vercel.app';
+const STRAVA_API_BASE='https://app-treino-gll3.vercel.app';
 
 function handleStrava(){
   const redirectUri=encodeURIComponent(location.origin+location.pathname);
@@ -1206,9 +1213,9 @@ function buildPanel(key){
   panel.className='treino-panel'+(editMode?' edit-mode':'');panel.id=`panel-${key}`;
   panel.innerHTML=`
     <div class="treino-header">
-      <div class="treino-label">${esc(data.label)}</div>
+      <div class="treino-label">${esc(shortDesc(data.label))}</div>
       <input class="treino-title-input" value="${esc(data.label)}" placeholder="Nome..."
-        oninput="treinos['${key}'].label=this.value;document.querySelector('#panel-${key} .treino-label').textContent=this.value">
+        oninput="treinos['${key}'].label=this.value;document.querySelector('#panel-${key} .treino-label').textContent=shortDesc(this.value)">
       <div class="header-btns">
         <button class="start-btn" id="start-${key}" onclick="startSession('${key}')">▶ Iniciar treino</button>
         <div class="progress-pill" id="pill-${key}">${dc}/${total}</div>
@@ -1336,6 +1343,12 @@ function toggleEditMode(){
 document.querySelectorAll('.treino-panel').forEach(p=>p.classList.toggle('edit-mode',editMode));
 }
 
+function toggleHdrMenu(){document.getElementById('hdr-menu').classList.toggle('show');}
+document.addEventListener('click',(e)=>{
+  const menu=document.getElementById('hdr-menu'),btn=document.getElementById('menu-toggle');
+  if(menu&&menu.classList.contains('show')&&!menu.contains(e.target)&&e.target!==btn)menu.classList.remove('show');
+});
+
 // ── DRAG & DROP ───────────────────────────────────────────────────────
 function initDrag(listEl,key,gi){
   let dragSrc=null,touchItem=null,touchClone=null,touchOffY=0;
@@ -1380,6 +1393,7 @@ function switchTab(key){
 }
 
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function shortDesc(label){const i=label.indexOf(' — ');return i===-1?label:label.slice(i+3);}
 document.getElementById('today-date').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'}).toUpperCase();
 buildAll();
 auth.onAuthStateChanged(user=>{currentUser=user;updateAuthUI();if(user){loadFromFirebase();handleStravaCallback();}});
