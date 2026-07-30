@@ -1,6 +1,6 @@
 # Meu Treino
 
-App pessoal para acompanhamento de treinos de musculação. Roda 100% no navegador, sem servidor, sem banco de dados, sem instalação.
+App pessoal para acompanhamento de treinos de musculação. Roda quase 100% no navegador — a única peça de servidor é uma integração opcional com o Strava, pra puxar dados do Garmin automaticamente.
 
 **→ [Abrir o app](https://gll86.github.io/app-treino)**
 
@@ -56,6 +56,14 @@ Ao concluir todos, aparece a tela de "TREINO CONCLUÍDO!". Durante a sessão, o 
 
 O histórico por enquanto é só persistência (Firebase + localStorage) — ainda não tem uma tela própria de gráfico/evolução.
 
+### Integração com Garmin (via Strava)
+
+Quem treina com um relógio Garmin no perfil "Strength Training" pode conectar a conta do Strava (menu ☰ → "🔗 Strava") pra enriquecer automaticamente o histórico com duração, frequência cardíaca e calorias de cada sessão — sem digitar nada. Como a Garmin não sincroniza retroativamente, só pega treinos gravados **depois** de conectar as contas.
+
+A Garmin não tem API pública pra pessoa física, então o caminho é: Garmin sincroniza nativamente com o Strava, e o app usa a API do Strava (exige assinatura paga deles) pra buscar os dados. Como o `client_secret` do OAuth não pode ficar exposto num arquivo estático, isso precisou da primeira peça de back-end do projeto: duas functions serverless na **Vercel**, publicadas a partir do mesmo repositório GitHub, sem afetar o deploy do front-end (GitHub Pages continua servindo só o `index.html`, como sempre).
+
+Uma vez conectado, uma sincronização automática roda uma vez por noite (Vercel Cron) e grava o resumo do dia anterior em `sessoes[data]` — sem precisar apertar nada. Detalhes técnicos completos (variáveis de ambiente, arquitetura, uma particularidade encontrada com variáveis "Sensitive" na Vercel) estão no `CLAUDE.md`.
+
 ### Os treinos ficam no código
 
 Os 6 treinos (A–F) são um objeto JavaScript hardcoded no arquivo:
@@ -85,6 +93,8 @@ O modo de edição permite renomear exercícios e grupos, ajustar séries, reord
 Antes, o fluxo era: editar o arquivo no notebook → enviar via WhatsApp → salvar no celular → abrir no Chrome. Funcionava, mas era chato.
 
 A solução foi publicar via **GitHub Pages**: o repositório é público e o GitHub serve o `index.html` direto em `https://gll86.github.io/app-treino`. O celular acessa essa URL, e o `localStorage` persiste entre sessões porque a origem é sempre a mesma.
+
+O back-end da integração com Strava (pasta `/api`) é publicado separadamente via **Vercel**, conectada ao mesmo repositório — um `git push` atualiza os dois deploys ao mesmo tempo, sem passo manual extra.
 
 ---
 
@@ -177,7 +187,8 @@ index.html
 │   ├── CSS embutido com custom properties (--accent, --bg, --card, ...)
 │   └── Firebase SDK (app-compat, auth-compat, database-compat) via CDN
 ├── <body>
-│   ├── <header>       barra superior com título, botão editar, botão login e data
+│   ├── <header>       título, data e botão ☰ que abre o menu (editar/login/Strava)
+│   ├── #hdr-menu      menu suspenso com Editar, Entrar e Strava
 │   ├── #edit-banner   banner visível apenas no modo de edição
 │   ├── #tabs          abas A–F
 │   ├── #panels        painéis de cada treino (pré-renderizados no HTML)
@@ -185,13 +196,16 @@ index.html
 └── <script>
     ├── TREINOS_DATA        objeto com os 6 treinos (hardcoded)
     ├── treinos             deep clone mutável de TREINOS_DATA
-    ├── cargas/historico    estado de carga por exercício e histórico de evolução
+    ├── cargas/historico/sessoes  carga por exercício, evolução e resumo Strava
     ├── Firebase init       config + auth + db (Realtime Database)
     ├── handleAuth          login/logout com Google via popup
-    ├── loadFromFirebase    carrega treinos/cargas/historico e reconstrói painéis
+    ├── loadFromFirebase    carrega treinos/cargas/historico/sessoes e reconstrói painéis
     ├── saveToCloud         escreve treinos em /users/{uid}/treinos
-    ├── saveCargas/Historico escrevem em /users/{uid}/cargas e /historico
+    ├── saveCargas/Historico/Sessoes  escrevem em /users/{uid}/cargas, /historico, /sessoes
+    ├── handleStrava/handleStravaCallback  inicia OAuth e processa o retorno do Strava
+    ├── toggleHdrMenu       abre/fecha o menu ☰ do header
     ├── buildAll/Panel      renderizam os painéis dinamicamente
+    ├── shortDesc           extrai só a descrição do label do treino (sem repetir o nome)
     ├── makeExItem          cria o elemento DOM de cada exercício (com input de carga)
     ├── toggleEditMode      alterna modo uso ↔ edição (salva ao sair)
     ├── startSession        liga a sessão guiada (destaca o próximo exercício)
@@ -200,6 +214,10 @@ index.html
     ├── logHistorico        grava um ponto de histórico ao confirmar um exercício
     ├── loadDone/saveDone   leem/escrevem localStorage (progresso diário)
     └── initDrag            drag-and-drop para reordenação (mouse + touch)
+
+api/  (functions serverless, publicadas na Vercel — ver CLAUDE.md)
+├── strava-exchange.js       troca o code do OAuth por tokens, grava no Firebase
+└── strava-nightly-sync.js   roda 1x/dia (Vercel Cron), sincroniza o treino do dia anterior
 ```
 
 ---
@@ -213,6 +231,10 @@ index.html
 | `sw.js` | Service worker — cache offline e atualização em background |
 | `icon-192.png` | Ícone PWA 192×192 |
 | `icon-512.png` | Ícone PWA 512×512 |
+| `api/strava-exchange.js` | Function (Vercel) — troca o code do OAuth do Strava por tokens |
+| `api/strava-nightly-sync.js` | Function (Vercel) — sincronização noturna via Vercel Cron |
+| `vercel.json` | Configuração do Vercel Cron |
+| `package.json` | Dependência (`firebase-admin`) usada pelas functions da Vercel |
 | `validate.ps1` | Script PowerShell de validação estrutural do HTML |
 | `validate.snapshot.json` | Snapshot da contagem esperada de exercícios |
 | `CLAUDE.md` | Instruções e contexto para o assistente de IA (Claude Code) |

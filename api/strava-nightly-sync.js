@@ -76,11 +76,6 @@ module.exports = async (req, res) => {
       const activities = await actRes.json();
       if (!Array.isArray(activities)) { results.push({ uid, error: 'activities fetch failed', detail: activities }); continue; }
 
-      if (req.query && req.query.debug === '1') {
-        results.push({ uid, debugActivities: activities.map(a => ({ name: a.name, type: a.type, sport_type: a.sport_type, start_date: a.start_date })) });
-        continue;
-      }
-
       const match = activities.find(a => a.type === 'WeightTraining' || a.sport_type === 'WeightTraining');
       if (!match) { results.push({ uid, found: false }); continue; }
 
