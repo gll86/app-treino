@@ -384,14 +384,22 @@ function saveDone(t,a){try{localStorage.setItem(getDoneKey(t),JSON.stringify(a))
 function getSessionKey(t){return `session_${t}_${new Date().toDateString()}`;}
 function isSessionActive(t){return localStorage.getItem(getSessionKey(t))==='1';}
 function setSessionActive(t,v){v?localStorage.setItem(getSessionKey(t),'1'):localStorage.removeItem(getSessionKey(t));}
+// 'done' guarda nomes de exercicio (nao posicoes): igual carga/historico, pra
+// sobreviver a reordenar/adicionar/remover exercicios no meio do dia. Guardar
+// por posicao foi o bug relatado em campo — editar a ordem via drag-and-drop
+// descolava o "concluido" do exercicio errado, travando o destaque da sessao.
+function getDoneCount(key){
+  const nomes=treinos[key].grupos.flatMap(g=>g.exercicios).map(e=>e.nome),done=loadDone(key);
+  return done.filter(n=>nomes.includes(n)).length;
+}
 function getCurrentIdx(key){
-  const total=treinos[key].grupos.flatMap(g=>g.exercicios).length,done=loadDone(key);
-  for(let i=0;i<total;i++) if(!done.includes(i)) return i;
+  const exs=treinos[key].grupos.flatMap(g=>g.exercicios),done=loadDone(key);
+  for(let i=0;i<exs.length;i++) if(!done.includes(exs[i].nome)) return i;
   return -1;
 }
 function updateStartBtn(key){
   const btn=document.getElementById(`start-${key}`);if(!btn)return;
-  const total=treinos[key].grupos.flatMap(g=>g.exercicios).length,dc=loadDone(key).length;
+  const total=treinos[key].grupos.flatMap(g=>g.exercicios).length,dc=getDoneCount(key);
   if(total===0||dc===total){btn.style.display='none';return;}
   btn.style.display='';
   const on=isSessionActive(key);
@@ -455,8 +463,8 @@ function buildTab(key){
 }
 
 function buildPanel(key){
-  const data=treinos[key],done=loadDone(key);
-  const total=data.grupos.flatMap(g=>g.exercicios).length,dc=done.length;
+  const data=treinos[key];
+  const total=data.grupos.flatMap(g=>g.exercicios).length,dc=getDoneCount(key);
   const panel=document.createElement('div');
   panel.className='treino-panel'+(editMode?' edit-mode':'');panel.id=`panel-${key}`;
   panel.innerHTML=`
@@ -499,7 +507,7 @@ function renderGroups(key){
     groupsEl.appendChild(block);
     const listEl=document.getElementById(`exlist-${key}-${gi}`);
     grupo.exercicios.forEach((ex,ei)=>{
-      listEl.appendChild(makeExItem(key,gi,ei,idx,ex,done.includes(idx)));idx++;
+      listEl.appendChild(makeExItem(key,gi,ei,idx,ex,done.includes(ex.nome)));idx++;
     });
     initDrag(listEl,key,gi);
   });
@@ -556,9 +564,10 @@ function quickCompleteEx(e,key,gi,ei,exIdx,item){
   e.stopPropagation();
   item.classList.add('done');
   item.querySelector('.check-circle').textContent='✓';
+  const nome=treinos[key].grupos[gi].exercicios[ei].nome;
   let done=loadDone(key);
-  if(!done.includes(exIdx)){done.push(exIdx);saveDone(key,done);}
-  logSessao('exercicio concluido',{key,exIdx,done});
+  if(!done.includes(nome)){done.push(nome);saveDone(key,done);}
+  logSessao('exercicio concluido',{key,nome,done});
   logHistorico(key,gi,ei);
   updateProgressUI(key);
   updateSessionHighlight(key,true);
@@ -584,7 +593,7 @@ function resetTreino(key){
   saveDone(key,[]);setSessionActive(key,false);rebuildPanel(key);
 }
 function updateProgressUI(key){
-  const done=loadDone(key),total=treinos[key].grupos.flatMap(g=>g.exercicios).length,dc=done.length;
+  const total=treinos[key].grupos.flatMap(g=>g.exercicios).length,dc=getDoneCount(key);
   const pill=document.getElementById(`pill-${key}`),bar=document.getElementById(`bar-${key}`),cong=document.getElementById(`congrats-${key}`);
   if(pill)pill.textContent=`${dc}/${total}`;
   if(bar)bar.style.width=total?`${Math.round(dc/total*100)}%`:'0%';
@@ -592,10 +601,17 @@ function updateProgressUI(key){
 }
 function toggleEditMode(){
   editMode=!editMode;
-  if(!editMode)saveToStorage();
+  if(!editMode){
+    saveToStorage();
+    // Renomear/mudar series so atualiza o objeto treinos (oninput direto, sem
+    // re-render). Sem reconstruir aqui, a lista ficava mostrando nome/estado
+    // antigo, e a sessao guiada calculava o "atual" sobre dados desatualizados
+    // (bug relatado em campo: destaque errado depois de editar exercicios).
+    buildAll();
+  }
   const btn=document.getElementById('edit-toggle'),banner=document.getElementById('edit-banner');
   btn.textContent=editMode?'✅ Salvar alterações':'✏️ Editar';btn.classList.toggle('active',editMode);banner.classList.toggle('show',editMode);
-document.querySelectorAll('.treino-panel').forEach(p=>p.classList.toggle('edit-mode',editMode));
+  document.querySelectorAll('.treino-panel').forEach(p=>p.classList.toggle('edit-mode',editMode));
 }
 
 function toggleHdrMenu(){document.getElementById('hdr-menu').classList.toggle('show');}

@@ -34,6 +34,14 @@ Progresso "feito hoje" é salvo no `localStorage` com chave `done_{treino}_{data
 (permanece por dispositivo — não sincroniza entre celular e notebook). O mesmo vale
 para o estado da sessão guiada, em `session_{treino}_{data-do-dia}`.
 
+**`done` guarda uma lista de *nomes* de exercício concluídos hoje** (igual carga/
+histórico — mesma ressalva: renomear "perde" a marcação), não posições no array.
+Já foi indexado por posição antes, e isso quebrava a sessão guiada sempre que o
+usuário reordenava exercícios via drag-and-drop no meio do dia (a posição N podia
+passar a apontar pra outro exercício, mas o app continuava achando "posição N =
+concluído"). Ao mexer em `getCurrentIdx`/`quickCompleteEx`/`renderGroups`/etc.,
+manter a comparação por `ex.nome`, nunca reintroduzir índice puro.
+
 Edições de treinos (`treinos`) são salvas em:
 - `localStorage` com chave `treinos_saved` (cache local imediato)
 - Firebase Realtime Database em `/users/{uid}/treinos` (sync entre dispositivos)
