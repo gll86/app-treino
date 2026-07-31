@@ -170,10 +170,44 @@ Todo change segue esta ordem obrigatória:
 2. **Validar** — `powershell -ExecutionPolicy Bypass -File validate.ps1`
    - Se a contagem de exercícios mudou intencionalmente: rodar com `-Update` primeiro
    - Só prosseguir se todos os checks passarem
-3. **Commitar** — propor commit ao usuário
-4. **Push** — só após aprovação do usuário
-5. **Atualizar documentação** — se a mudança afetou funcionalidade, atualizar
+   - Cobre: divs balanceados, IDs/treinos obrigatórios, contagem de exercícios,
+     `TREINOS_DATA` é JSON válido, `TREINOS_VERSION` foi incrementado quando
+     `TREINOS_DATA` muda em relação ao último commit (comparação via `git show
+     HEAD:index.html`), toda função referenciada em `onclick`/`oninput`/
+     `onchange`/`onkeydown` existe no script, e ausência de padrões proibidos
+     (funcionalidades removidas). É validação estática — pega JSON quebrado,
+     handler chamando função inexistente e esquecimento do bump de versão, mas
+     não pega bugs de comportamento em runtime (isso é o passo 3).
+3. **Teste manual no navegador para mudanças de comportamento JS** — se a
+   mudança tocou lógica (não só conteúdo/dados estáticos), testar de fato antes
+   de propor commit, usando a extensão Claude in Chrome:
+   - Subir um servidor estático local pro diretório do projeto (não dá pra usar
+     `file://` — a extensão do Chrome não interage com paginas locais abertas
+     assim). Não há Node/Python neste ambiente; usar `System.Net.HttpListener`
+     via PowerShell (`run_in_background: true`) numa porta livre.
+   - Abrir a página pela extensão, checar console (`read_console_messages`) por
+     erros no carregamento.
+   - Exercitar o fluxo alterado (ex: sessão guiada completa — iniciar treino,
+     concluir todos os exercícios até "TREINO CONCLUÍDO!", navegar pelas 4
+     abas) e conferir console de novo.
+   - Encerrar o listener (`TaskStop`) e fechar a aba de teste ao terminar.
+4. **Commitar** — propor commit ao usuário
+5. **Push** — só após aprovação do usuário
+6. **Atualizar documentação** — se a mudança afetou funcionalidade, atualizar
    `README.md` e este `CLAUDE.md`, commitar e pushar
+
+## Instrumentação da sessão guiada
+Funções da sessão guiada (`startSession`, `updateSessionHighlight`,
+`quickCompleteEx`, o listener de `visibilitychange`, e o resync do
+`loadFromFirebase`) logam no console com o prefixo `[sessao]` via `logSessao()`
+— inclui um log de ALERTA quando o exercício "atual" calculado não bate com
+nenhum item renderizado no DOM, e um log toda vez que um toque no check-circle
+é ignorado (mostra o índice tocado vs. o índice que o app considera atual).
+Isso existe por causa de um bug relatado em campo (destaque da sessão guiada
+"travando" no meio do treino, provavelmente ligado a bloqueio de tela/troca de
+app) que não foi possível reproduzir em desktop — se acontecer de novo, pedir
+pro usuário abrir o console remoto (`chrome://inspect` via USB, ou o próprio
+console do navegador) e filtrar por `[sessao]` pra ver a evidência exata.
 
 ## Comandos
 Para visualizar mudanças localmente: abrir `index.html` no navegador (ou usar a

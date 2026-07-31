@@ -335,7 +335,14 @@ function saveToCloud(){
     .catch(()=>{if(btn)btn.textContent='⚠ sync';});
 }
 
+let firebaseLoadInFlight=false;
 function loadFromFirebase(){
+  // Guarda contra chamadas concorrentes: o SDK do Firebase Auth pode disparar
+  // onAuthStateChanged de novo (ex: refresh de token ao voltar do background)
+  // no meio de uma sessão guiada, e um buildAll() redundante nesse momento
+  // derruba e recria os paineis, interrompendo o destaque do exercício atual.
+  if(firebaseLoadInFlight){logSessao('loadFromFirebase ignorado: ja havia um em andamento');return;}
+  firebaseLoadInFlight=true;
   const btn=document.getElementById('auth-btn');if(btn)btn.textContent='⏳';
   Promise.all([
     db.ref(`users/${currentUser.uid}/treinos`).once('value'),
@@ -346,7 +353,11 @@ function loadFromFirebase(){
   ]).then(([tSnap,tvSnap,cSnap,hSnap,sSnap])=>{
     const data=tSnap.val();
     const cloudV=tvSnap.val()||0;
-    if(data&&cloudV>=TREINOS_VERSION){treinos=data;localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));localStorage.setItem(TREINOS_VERSION_KEY,TREINOS_VERSION);}
+    let treinosChanged=false;
+    if(data&&cloudV>=TREINOS_VERSION){
+      if(JSON.stringify(data)!==JSON.stringify(treinos)){treinos=data;treinosChanged=true;}
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos));localStorage.setItem(TREINOS_VERSION_KEY,TREINOS_VERSION);
+    }
     else saveToCloud();
     const c=cSnap.val();
     if(c){cargas=c;localStorage.setItem(CARGAS_KEY,JSON.stringify(cargas));}
@@ -357,9 +368,10 @@ function loadFromFirebase(){
     const s=sSnap.val();
     if(s){sessoes=s;localStorage.setItem(SESSOES_KEY,JSON.stringify(sessoes));}
     else saveSessoes();
-    buildAll();
+    if(treinosChanged){logSessao('treinos da nuvem diferem do local, reconstruindo paineis');buildAll();}
     updateAuthUI();
-  }).catch(()=>{if(btn)btn.textContent='⚠ offline';});
+    firebaseLoadInFlight=false;
+  }).catch(()=>{firebaseLoadInFlight=false;if(btn)btn.textContent='⚠ offline';});
 }
 let editMode=false, currentTab='A';
 
@@ -387,20 +399,44 @@ function updateStartBtn(key){
   btn.classList.toggle('active',on);
   btn.onclick=on?()=>resetTreino(key):()=>startSession(key);
 }
+// Log leve pra diagnosticar bugs da sessão guiada relatados em campo (ex: destaque
+// que trava no meio do treino). Filtre no console do navegador por "[sessao]",
+// ou via read_console_messages com pattern "\\[sessao\\]".
+function logSessao(...args){console.log('[sessao]',new Date().toISOString(),...args);}
+
 function updateSessionHighlight(key,scroll){
-  const panel=document.getElementById(`panel-${key}`);if(!panel)return;
+  const panel=document.getElementById(`panel-${key}`);
+  if(!panel){logSessao('updateSessionHighlight: panel nao encontrado',{key});return;}
   panel.querySelectorAll('.exercise-item.current').forEach(i=>i.classList.remove('current'));
   if(isSessionActive(key)){
     const idx=getCurrentIdx(key);
-    if(idx===-1){setSessionActive(key,false);}
+    if(idx===-1){logSessao('treino concluido, encerrando sessao',{key});setSessionActive(key,false);}
     else{
       const item=panel.querySelector(`.exercise-item[data-idx="${idx}"]`);
       if(item){item.classList.add('current');if(scroll)item.scrollIntoView({behavior:'smooth',block:'center'});}
+      else{
+        // Sintoma relatado em campo: destaque "trava" e nao avanca. Se isso
+        // aparecer no log, o idx calculado nao bate com nenhum item renderizado
+        // no DOM (paineis dessincronizados de treinos[key] ou de 'done').
+        const total=treinos[key]?.grupos?.flatMap(g=>g.exercicios)?.length;
+        const domCount=panel.querySelectorAll('.exercise-item').length;
+        logSessao('ALERTA: item current nao encontrado no DOM',{key,idx,total,domCount,done:loadDone(key)});
+      }
     }
   }
   updateStartBtn(key);
 }
-function startSession(key){setSessionActive(key,true);updateSessionHighlight(key,true);}
+function startSession(key){logSessao('startSession',{key});setSessionActive(key,true);updateSessionHighlight(key,true);}
+
+// Ao voltar de segundo plano (tela bloqueada, troca de app), reforça o
+// destaque do exercício atual: o navegador pode restaurar uma tela
+// parada/desatualizada, e reaplicar a classe 'current' força o repaint.
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+    logSessao('app voltou ao primeiro plano, revalidando destaque');
+    Object.keys(treinos).forEach(k=>updateSessionHighlight(k,false));
+  }
+});
 
 // ── BUILD ─────────────────────────────────────────────────────────────
 const tabsEl=document.getElementById('tabs');
@@ -498,8 +534,15 @@ function makeExItem(key,gi,ei,idx,ex,isDone){
     </div>`;
   if(!editMode){
     item.querySelector('.ex-row').onclick=(e)=>{
-      if(e.target.closest('.check-circle')&&isSessionActive(key)&&idx===getCurrentIdx(key)){
-        quickCompleteEx(e,key,gi,ei,idx,item);
+      if(!e.target.closest('.check-circle'))return;
+      const active=isSessionActive(key),cur=getCurrentIdx(key);
+      if(active&&idx===cur){quickCompleteEx(e,key,gi,ei,idx,item);}
+      else{
+        // Toque no check-circle nao registrado: ou a sessao nao esta ativa, ou
+        // esse nao e o exercicio "atual" pela contagem do app. Se o usuario
+        // reportar destaque travado, esse log mostra o idx tocado vs o idx
+        // que o app considera atual (cur) — evidencia direta do desalinhamento.
+        logSessao('tap em check-circle ignorado (fora de ordem ou sessao inativa)',{key,idxTocado:idx,sessionActive:active,currentIdx:cur});
       }
     };
   }
@@ -515,6 +558,7 @@ function quickCompleteEx(e,key,gi,ei,exIdx,item){
   item.querySelector('.check-circle').textContent='✓';
   let done=loadDone(key);
   if(!done.includes(exIdx)){done.push(exIdx);saveDone(key,done);}
+  logSessao('exercicio concluido',{key,exIdx,done});
   logHistorico(key,gi,ei);
   updateProgressUI(key);
   updateSessionHighlight(key,true);
