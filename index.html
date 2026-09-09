@@ -593,8 +593,18 @@ function makeExItem(key,gi,ei,idx,ex,isDone){
 
 
 
+// Achado em teste manual (2026-09-09): um toque duplo/muito rapido no
+// check-circle pode completar 2 exercicios de uma vez em vez de 1 — o
+// primeiro toque conclui o exercicio atual, o item encolhe (perde o padding
+// extra do destaque "current"), o proximo item sobe pra ocupar essa posicao
+// na tela, e o segundo toque (mesma coordenada) acaba caindo no check-circle
+// dele. O guard abaixo ignora um novo toque de conclusao muito perto do
+// anterior no mesmo treino.
+let lastQuickCompleteTs={};
 function quickCompleteEx(e,key,gi,ei,exIdx,item){
   e.stopPropagation();
+  if(Date.now()-(lastQuickCompleteTs[key]||0)<400)return;
+  lastQuickCompleteTs[key]=Date.now();
   item.classList.add('done');
   item.querySelector('.check-circle').textContent='✓';
   const nome=treinos[key].grupos[gi].exercicios[ei].nome;
