@@ -217,7 +217,7 @@ Todo change segue esta ordem obrigatória:
 
 ## Instrumentação da sessão guiada
 Funções da sessão guiada (`startSession`, `updateSessionHighlight`,
-`quickCompleteEx`, o listener de `visibilitychange`, e o resync do
+`quickCompleteEx`, `saveDone`, o listener de `visibilitychange`, e o resync do
 `loadFromFirebase`) logam no console com o prefixo `[sessao]` via `logSessao()`
 — inclui um log de ALERTA quando o exercício "atual" calculado não bate com
 nenhum item renderizado no DOM, e um log toda vez que um toque no check-circle
@@ -236,6 +236,17 @@ o usuário recarregar a página manualmente, mas é uma recuperação do sintoma
 a causa raiz do desalinhamento entre o painel e `treinos`/`done` continua sem
 confirmação; a linha `[sessao] reconstruindo painel para recuperar destaque`
 no console é a pista de que isso ocorreu.
+
+`saveDone` também loga ALERTA quando a gravação do progresso do dia
+(`localStorage.setItem` da chave `done_*`) falha — seja porque lança exceção,
+seja porque uma releitura imediata não bate com o que foi gravado (setItem
+que "funciona" sem persistir, ex: modo privado no Safari/mobile). Isso foi
+adicionado depois que um teste manual reproduziu uma vez um caso em que o
+app logava "exercício concluído" mas a marcação não persistia nem aparecia na
+UI, sem erro nenhum no console — o `catch{}` de `saveDone` engolia a falha em
+silêncio. O log `[sessao] ALERTA: saveDone falhou` (ou `nao persistiu`) é a
+evidência a procurar se o destaque travar de novo: se aparecer, confirma essa
+hipótese de causa; se não aparecer, a causa é outra.
 
 ## Comandos
 Para visualizar mudanças localmente: abrir `index.html` no navegador (ou usar a
