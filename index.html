@@ -198,11 +198,6 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
     <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
     <button class="hdr-btn" id="historico-toggle" onclick="openHistorico()">📊 Histórico</button>
     <button class="hdr-btn" id="strava-btn" onclick="handleStrava()">🔗 Strava</button>
-    <!-- TEMPORARIO (remover apos uso, nao documentar no CLAUDE.md): botao de
-    debug pra exportar o `treinos` atual como JSON, usado uma vez pra recuperar
-    edicoes feitas via UI (renomeacoes) sem o usuario ter que digitar tudo de
-    novo no chat. -->
-    <button class="hdr-btn" id="export-debug-btn" onclick="exportTreinosDebug()">📋 Copiar treinos</button>
   </div>
 </header>
 <div id="edit-banner">
@@ -227,12 +222,12 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
   <div id="hist-sessoes-panel" style="display:none"></div>
 </div>
 <script>
-const TREINOS_DATA = {"A":{"label":"PUSH — Peito Completo, Ombros e Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Flexões de braço","series":3,"reps":15},{"nome":"Supino inclinado com halteres","series":4,"reps":8},{"nome":"Crucifixo inclinado (halteres/cabo)","series":3,"reps":10},{"nome":"Crucifixo no cabo alto","series":3,"reps":12}]},{"nome":"Ombro","exercicios":[{"nome":"Desenvolvimento com halteres","series":3,"reps":8},{"nome":"Elevação frontal na polia baixa","series":3,"reps":12},{"nome":"Elevação lateral no cabo","series":4,"reps":12}]},{"nome":"Tríceps","exercicios":[{"nome":"Tríceps francês (cabo/halter)","series":3,"reps":10},{"nome":"Tríceps pulley (barra direta ou V)","series":3,"reps":10},{"nome":"Tríceps corda","series":3,"reps":12}]},{"nome":"Cardio","exercicios":[{"nome":"Cardio pós-treino (20 min, intensidade moderada contínua)","series":1,"reps":1}]}]},"B":{"label":"PULL — Costas, Trapézio, Lombar e Bíceps","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada alta pronada (aberta)","series":4,"reps":8},{"nome":"Puxada supinada (inversa)","series":3,"reps":10},{"nome":"Remada curvada com barra","series":4,"reps":8}]},{"nome":"Trapézio e Lombar","exercicios":[{"nome":"Remada alta na pegada aberta","series":3,"reps":12},{"nome":"Encolhimento com halteres/barra (segurar 2s)","series":4,"reps":12},{"nome":"Extensão lombar (banco romano)","series":3,"reps":12},{"nome":"Facepull (linha da testa)","series":4,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Rosca inclinada com halteres (45°)","series":3,"reps":10},{"nome":"Rosca Scott (barra W)","series":3,"reps":10},{"nome":"Rosca martelo com halteres","series":3,"reps":12},{"nome":"Rosca inversa (barra W)","series":3,"reps":15}]},{"nome":"Cardio","exercicios":[{"nome":"Cardio pós-treino (20 min, intensidade moderada contínua)","series":1,"reps":1}]}]},"C":{"label":"LEGS & CORE — Pernas Completas e Abdômen","grupos":[{"nome":"Abdômen","exercicios":[{"nome":"Abdominal infra (suspenso)","series":4,"reps":15},{"nome":"Abdominal supra na polia alta","series":4,"reps":12},{"nome":"Abdominal oblíquo no cabo","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Gêmeos em pé","series":4,"reps":12},{"nome":"Gêmeos sentado (cavalo)","series":4,"reps":15}]},{"nome":"Quadríceps","exercicios":[{"nome":"Agachamento livre (barra)","series":4,"reps":8},{"nome":"Leg press 45° (pés baixos)","series":3,"reps":10},{"nome":"Cadeira extensora (drop-set na última série)","series":3,"reps":12}]},{"nome":"Posterior e Glúteos","exercicios":[{"nome":"Stiff com barra ou halteres","series":4,"reps":8},{"nome":"Mesa ou cadeira flexora","series":3,"reps":10},{"nome":"Elevação pélvica","series":3,"reps":10}]},{"nome":"Adutores e Abdutores","exercicios":[{"nome":"Cadeira abdutora (tronco à frente)","series":3,"reps":15},{"nome":"Cadeira adutora","series":3,"reps":15}]}]},"D":{"label":"CARDIO — Recuperação Ativa (dia de folga da musculação)","grupos":[{"nome":"Cardio LISS","exercicios":[{"nome":"Caminhada rápida na esteira (5,9 km/h, 40 min)","series":1,"reps":1}]}]}};
+const TREINOS_DATA = {"A":{"label":"PUSH — Peito Completo, Ombros e Tríceps","grupos":[{"nome":"Peito","exercicios":[{"nome":"Supino inclinado com halteres","series":6,"reps":8},{"nome":"Supino reto","series":3,"reps":15},{"nome":"Crucifixo inclinado ","series":3,"reps":10},{"nome":"Crucifixo no cabo alto","series":3,"reps":12}]},{"nome":"Ombro","exercicios":[{"nome":"Desenvolvimento","series":3,"reps":8},{"nome":"Elevação lateral no cabo","series":4,"reps":12},{"nome":"Elevação lateral máquina ","series":3,"reps":12}]},{"nome":"Tríceps","exercicios":[{"nome":"Tríceps corda","series":3,"reps":12},{"nome":"Tríceps francês ","series":3,"reps":10},{"nome":"Tríceps barra w","series":3,"reps":10}]}]},"B":{"label":"PULL — Costas, Trapézio, Lombar e Bíceps","grupos":[{"nome":"Costas","exercicios":[{"nome":"Puxada alta aberta","series":4,"reps":8},{"nome":"Puxada supinada","series":3,"reps":10},{"nome":"Remada curvada com barra","series":4,"reps":8},{"nome":"Remada com triângulo","series":3,"reps":12}]},{"nome":"Trapézio e Lombar","exercicios":[{"nome":"Remada alta na pegada aberta","series":3,"reps":12},{"nome":"Crucifixo inverso na máquina ","series":4,"reps":12},{"nome":"Extensão lombar","series":3,"reps":12}]},{"nome":"Bíceps","exercicios":[{"nome":"Rosca banco inclinado 45","series":3,"reps":10},{"nome":"Rosca martelo com halteres","series":3,"reps":12},{"nome":"Rosca W","series":3,"reps":15}]}]},"C":{"label":"LEGS & CORE — Pernas Completas e Abdômen","grupos":[{"nome":"Abdômen","exercicios":[{"nome":"Abdominal vela","series":4,"reps":12},{"nome":"Ab Wheel","series":4,"reps":15},{"nome":"Abdominal remador","series":3,"reps":12}]},{"nome":"Panturrilha","exercicios":[{"nome":"Gêmeos em pé","series":4,"reps":12},{"nome":"Gêmeos máquina sentado","series":3,"reps":12},{"nome":"Gêmeos sentado","series":4,"reps":15}]},{"nome":"Quadríceps","exercicios":[{"nome":"Agachamento livre","series":4,"reps":8},{"nome":"Leg press","series":3,"reps":10},{"nome":"Cadeira extensora","series":3,"reps":12}]},{"nome":"Posterior e Glúteos","exercicios":[{"nome":"Stiff","series":4,"reps":8},{"nome":"Cadeira flexora","series":3,"reps":10},{"nome":"Elevação pélvica","series":3,"reps":10}]}]}};
 
 const STORAGE_KEY='treinos_saved';
 const CARGAS_KEY='cargas_saved';
 const HIST_KEY='historico_saved';
-const TREINOS_VERSION=3;
+const TREINOS_VERSION=4;
 const TREINOS_VERSION_KEY='treinos_version';
 function loadTreinos(){
   const storedV=parseInt(localStorage.getItem(TREINOS_VERSION_KEY)||'0',10);
@@ -706,20 +701,6 @@ document.addEventListener('click',(e)=>{
   const menu=document.getElementById('hdr-menu'),btn=document.getElementById('menu-toggle');
   if(menu&&menu.classList.contains('show')&&!menu.contains(e.target)&&e.target!==btn)menu.classList.remove('show');
 });
-
-// TEMPORARIO — ver comentario no botao no HTML. Remover essa funcao e o
-// botao junto quando nao precisar mais.
-function exportTreinosDebug(){
-  document.getElementById('hdr-menu').classList.remove('show');
-  const json=JSON.stringify(treinos,null,2);
-  const btn=document.getElementById('export-debug-btn');
-  const done=()=>{const p=btn.textContent;btn.textContent='✅ Copiado!';setTimeout(()=>{btn.textContent=p;},2000);};
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(json).then(done).catch(()=>{window.prompt('Copie o texto abaixo:',json);});
-  }else{
-    window.prompt('Copie o texto abaixo:',json);
-  }
-}
 
 // ── HISTÓRICO ─────────────────────────────────────────────────────────
 let histPeriodoDias=30,histTabAtiva='evolucao';

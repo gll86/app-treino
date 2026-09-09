@@ -34,7 +34,7 @@ foreach ($id in $ids) {
     if ($html.Contains($id)) { Pass "Elemento presente: $id" }
     else                      { Fail "Elemento ausente:  $id" }
 }
-foreach ($key in @('"A":{','"B":{','"C":{','"D":{')) {
+foreach ($key in @('"A":{','"B":{','"C":{')) {
     if ($html.Contains($key)) { Pass "Treino presente no TREINOS_DATA: $key" }
     else                       { Fail "Treino ausente no TREINOS_DATA:  $key" }
 }

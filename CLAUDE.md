@@ -24,7 +24,7 @@ Os treinos ficam num objeto `TREINOS_DATA` (JS, hardcoded no arquivo), com a for
       ...
     ]
   },
-  "B": { ... }, ... até "D"
+  "B": { ... }, "C": { ... }
 }
 ```
 Em runtime, isso é copiado para a variável `treinos` (deep clone de `TREINOS_DATA`),
@@ -103,9 +103,12 @@ sessoes["2026-07-29"]   // {duracaoMin, fcMedia, fcMax, calorias, stravaId}
   UI é uma decisão em aberto (não adicionar tela/exibição sem alinhar antes).
 
 ## Funcionalidades existentes
-- 4 treinos (A–D) organizados por grupo muscular, navegáveis por abas: ciclo
-  infinito 3 ON / 1 OFF — Push, Pull, Legs & Core, Cardio (dia de folga, sem
-  variação B; os 4 dias se repetem em sequência continuamente).
+- 3 treinos (A–C) organizados por grupo muscular, navegáveis por abas: ciclo
+  infinito contínuo — Push, Pull, Legs & Core (sem variação B; os 3 dias se
+  repetem em sequência continuamente, sem dia de folga embutido no app).
+  Havia um 4º treino "D" (Cardio, dia de folga) removido em 2026-09-09 a
+  pedido do usuário (`TREINOS_VERSION` 3→4) — ver nota sobre bump de versão
+  logo acima.
 - Input de carga (kg) por exercício, sempre recarregando o último valor salvo.
 - Sessão guiada obrigatória: botão "▶ Iniciar treino" destaca o próximo exercício
   pendente (borda, sombra, tag "AGORA"); só ele responde ao toque, e confirmar avança
