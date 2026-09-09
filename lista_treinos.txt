@@ -1,81 +1,65 @@
 LISTA DE TREINOS - Meu Treino
 ================================
-Ciclo infinito 3 ON / 1 OFF (Push, Pull, Legs & Core, Cardio), sem variação B —
-os 4 dias se repetem em sequência continuamente.
+Ciclo infinito contínuo (Push, Pull, Legs & Core), sem variação B —
+os 3 dias se repetem em sequência continuamente, sem dia de folga
+embutido no app.
 
-PUSH — Peito, Ombros e Tríceps (Dia 1)
+PUSH — Peito Completo, Ombros e Tríceps (Dia 1)
 ----------------------------
 Peito
-  - Supino inclinado com halteres — 4x8-10
-  - Crucifixo inclinado (halteres/cabo) — 3x10-12
-  - Crucifixo no cabo alto — 3x12-15
+  - Supino inclinado com halteres — 6x8
+  - Supino reto — 3x15
+  - Crucifixo inclinado — 3x10
+  - Crucifixo no cabo alto — 3x12
 
 Ombro
-  - Desenvolvimento com halteres — 3x8-10
-  - Elevação frontal na polia baixa — 3x12
-  - Elevação lateral no cabo — 4x12-15
+  - Desenvolvimento — 3x8
+  - Elevação lateral no cabo — 4x12
+  - Elevação lateral máquina — 3x12
 
 Tríceps
-  - Tríceps francês (cabo/halter) — 3x10-12
-  - Tríceps pulley (barra reta ou V) — 3x10-12
-  - Tríceps corda — 3x12-15
-
-Cardio: 20 min pós-treino em intensidade moderada contínua.
+  - Tríceps corda — 3x12
+  - Tríceps francês — 3x10
+  - Tríceps barra w — 3x10
 
 
 PULL — Costas, Trapézio, Lombar e Bíceps (Dia 2)
 ----------------------------
 Costas
-  - Puxada alta pronada (aberta) — 4x8-10
-  - Puxada supinada (inversa) — 3x10-12
-  - Remada curvada com barra — 4x8-10
+  - Puxada alta aberta — 4x8
+  - Puxada supinada — 3x10
+  - Remada curvada com barra — 4x8
+  - Remada com triângulo — 3x12
 
 Trapézio e Lombar
   - Remada alta na pegada aberta — 3x12
-  - Encolhimento com halteres/barra (segurar 2s) — 4x12-15
-  - Extensão lombar (banco romano) — 3x12-15
-  - Crucifixo invertido (cabo/halter) — 4x12-15
+  - Crucifixo inverso na máquina — 4x12
+  - Extensão lombar — 3x12
 
 Bíceps
-  - Rosca inclinada com halteres (banco 45°) — 3x10-12
-  - Rosca Scott (barra W) — 3x10-12
+  - Rosca banco inclinado 45 — 3x10
   - Rosca martelo com halteres — 3x12
-  - Rosca inversa (barra W) — 3x15
-
-Cardio: 20 min pós-treino em intensidade moderada contínua.
+  - Rosca W — 3x15
 
 
-LEGS & CORE — Pernas e Abdômen (Dia 3)
+LEGS & CORE — Pernas Completas e Abdômen (Dia 3)
 ----------------------------
-Quadríceps
-  - Agachamento livre (barra) — 4x8-10
-  - Leg press 45° (pés baixos) — 3x10-12
-  - Cadeira extensora (drop-set na última série) — 3x12-15
-
-Posterior e Glúteos
-  - Stiff com barra ou halteres — 4x8-10
-  - Mesa ou cadeira flexora — 3x10-12
-  - Elevação pélvica — 3x10-12
-
-Adutores e Abdutores
-  - Cadeira abdutora (tronco à frente) — 3x15
-  - Cadeira adutora — 3x15
+Abdômen
+  - Abdominal vela — 4x12
+  - Ab Wheel — 4x15
+  - Abdominal remador — 3x12
 
 Panturrilha
-  - Gêmeos em pé — 4x12-15
-  - Gêmeos sentado (cavalo) — 4x15-20
+  - Gêmeos em pé — 4x12
+  - Gêmeos máquina sentado — 3x12
+  - Gêmeos sentado — 4x15
 
-Abdômen
-  - Abdominal infra (suspenso) — 4x15-20
-  - Abdominal supra na polia alta — 4x12-15
-  - Abdominal oblíquo no cabo — 3x12-15
+Quadríceps
+  - Agachamento livre — 4x8
+  - Leg press — 3x10
+  - Cadeira extensora — 3x12
 
-Cardio: sem cardio (foco total nas pernas).
-
-
-CARDIO — Recuperação Ativa (Dia 4, dia de folga)
-----------------------------
-Cardio LISS
-  - Caminhada acelerada ou bike leve na Zona 2 (40 min)
-
-Descanso absoluto de musculação.
+Posterior e Glúteos
+  - Stiff — 4x8
+  - Cadeira flexora — 3x10
+  - Elevação pélvica — 3x10
