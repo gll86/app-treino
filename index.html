@@ -418,6 +418,7 @@ function updateStartBtn(key){
 // ou via read_console_messages com pattern "\\[sessao\\]".
 function logSessao(...args){console.log('[sessao]',new Date().toISOString(),...args);}
 
+const recoveringHighlight=new Set();
 function updateSessionHighlight(key,scroll){
   const panel=document.getElementById(`panel-${key}`);
   if(!panel){logSessao('updateSessionHighlight: panel nao encontrado',{key});return;}
@@ -435,6 +436,15 @@ function updateSessionHighlight(key,scroll){
         const total=treinos[key]?.grupos?.flatMap(g=>g.exercicios)?.length;
         const domCount=panel.querySelectorAll('.exercise-item').length;
         logSessao('ALERTA: item current nao encontrado no DOM',{key,idx,total,domCount,done:loadDone(key)});
+        // Em vez de deixar a sessao "travada" sem destaque nenhum, reconstroi o
+        // painel a partir do estado real (treinos/done) e tenta de novo uma unica
+        // vez (guarda evita loop infinito se o desalinhamento persistir).
+        if(!recoveringHighlight.has(key)){
+          recoveringHighlight.add(key);
+          logSessao('reconstruindo painel para recuperar destaque',{key});
+          rebuildPanel(key);
+          recoveringHighlight.delete(key);
+        }
       }
     }
   }
