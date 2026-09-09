@@ -67,6 +67,18 @@ historico["A"]["Supino inclinado com halteres"]   // [{data:'YYYY-MM-DD', carga}
 - `localStorage`: `cargas_saved` e `historico_saved`
 - Firebase: `/users/{uid}/cargas` e `/users/{uid}/historico`
 
+**IMPORTANTE — nome de exercício não pode conter `. # $ [ ] /`** (restrição
+de chaves do Firebase Realtime Database — `cargas`/`historico` são indexados
+pelo nome). Bug de campo confirmado em 2026-09-09: um exercício com `/` no
+nome (ex: "Crucifixo inclinado (halteres/cabo)") fazia `db.ref(...).set()`
+lançar exceção síncrona dentro do fluxo de conclusão da sessão guiada,
+travando o contador/destaque no meio (`saveCargas`/`saveHistorico`/
+`saveToCloud` hoje têm `try/catch` em volta da chamada Firebase pra essa
+falha não interromper mais o resto do fluxo — mas o dado desse exercício
+específico continua sem sincronizar entre dispositivos, só fica local). Ao
+adicionar/renomear exercício (via UI de edição ou direto no `TREINOS_DATA`),
+evitar esses caracteres no nome.
+
 `loadFromFirebase()` (resync, dispara de novo quando o Firebase Auth refaz o
 `onAuthStateChanged` — ex: token expirando, app voltando do background) só
 aceita o snapshot da nuvem para `cargas`/`historico` se nenhuma gravação local
@@ -217,36 +229,51 @@ Todo change segue esta ordem obrigatória:
 
 ## Instrumentação da sessão guiada
 Funções da sessão guiada (`startSession`, `updateSessionHighlight`,
-`quickCompleteEx`, `saveDone`, o listener de `visibilitychange`, e o resync do
-`loadFromFirebase`) logam no console com o prefixo `[sessao]` via `logSessao()`
-— inclui um log de ALERTA quando o exercício "atual" calculado não bate com
-nenhum item renderizado no DOM, e um log toda vez que um toque no check-circle
-é ignorado (mostra o índice tocado vs. o índice que o app considera atual).
-Isso existe por causa de um bug relatado em campo (destaque da sessão guiada
-"travando" no meio do treino, provavelmente ligado a bloqueio de tela/troca de
-app) que não foi possível reproduzir em desktop — se acontecer de novo, pedir
-pro usuário abrir o console remoto (`chrome://inspect` via USB, ou o próprio
-console do navegador) e filtrar por `[sessao]` pra ver a evidência exata.
+`quickCompleteEx`, `saveDone`, `saveCargas`, `saveHistorico`, `saveToCloud`, o
+listener de `visibilitychange`, e o resync do `loadFromFirebase`) logam no
+console com o prefixo `[sessao]` via `logSessao()` — inclui um log de ALERTA
+quando o exercício "atual" calculado não bate com nenhum item renderizado no
+DOM, e um log toda vez que um toque no check-circle é ignorado (mostra o
+índice tocado vs. o índice que o app considera atual). Essa instrumentação
+existe por causa de um bug de campo (destaque da sessão guiada "travando" no
+exercício recém-concluído) — ver próximo parágrafo pra causa raiz já
+confirmada e corrigida. Se algum sintoma parecido aparecer de novo, pedir pro
+usuário abrir o console remoto (`chrome://inspect` via USB, ou o próprio
+console do navegador) e filtrar por `[sessao]`.
 
-Quando esse ALERTA acontece, `updateSessionHighlight` não fica só no log:
-reconstrói o painel (`rebuildPanel`) a partir do estado real (`treinos`/`done`)
-e tenta destacar de novo uma única vez (guarda em `recoveringHighlight` evita
-loop se o desalinhamento persistir). Isso evita que a sessão fique parada até
-o usuário recarregar a página manualmente, mas é uma recuperação do sintoma —
-a causa raiz do desalinhamento entre o painel e `treinos`/`done` continua sem
-confirmação; a linha `[sessao] reconstruindo painel para recuperar destaque`
-no console é a pista de que isso ocorreu.
+Quando o ALERTA de mismatch DOM/idx acontece, `updateSessionHighlight` não
+fica só no log: reconstrói o painel (`rebuildPanel`) a partir do estado real
+(`treinos`/`done`) e tenta destacar de novo uma única vez (guarda em
+`recoveringHighlight` evita loop se o desalinhamento persistir).
+
+**Causa raiz do bug de campo "destaque travado" (confirmada e corrigida em
+2026-09-09):** nome de exercício com `/` (ex: "Crucifixo inclinado
+(halteres/cabo)") viola a restrição de chaves do Firebase Realtime Database
+(proíbe `. # $ [ ] /`) — `cargas`/`historico` são indexados pelo nome do
+exercício, então sincronizar com a nuvem lançava uma exceção SÍNCRONA dentro
+de `quickCompleteEx` (via `logHistorico`→`saveHistorico`), DEPOIS de
+`saveDone` já ter persistido o progresso (por isso um refresh da página
+sempre "consertava") mas ANTES de `updateProgressUI`/`updateSessionHighlight`
+rodarem — travando contador e destaque no exercício recém-concluído, sem
+erro visível pro usuário. Só acontecia com carga preenchida porque
+`logHistorico` só chama `saveHistorico()` nesse caso — daí a suspeita inicial
+de que era "editar o campo" que causava o bug. `saveCargas`, `saveHistorico`
+e `saveToCloud` agora envolvem a chamada `db.ref(...).set()` em `try/catch`,
+logando `[sessao] ALERTA: sync de X com o Firebase falhou` em vez de deixar a
+exceção propagar. **Limitação residual:** carga/histórico de exercícios com
+esses caracteres no nome continuam sem sincronizar entre dispositivos (ficam
+só no `localStorage` local) — corrigir de vez exigiria renomear o exercício
+(removendo `/`), o que dispara bump de `TREINOS_VERSION` e reset de edições
+locais (ver seção acima), então não foi feito sem alinhar com o usuário
+antes. Ver seção "Estrutura de dados" (carga/histórico) pra mais detalhe.
 
 `saveDone` também loga ALERTA quando a gravação do progresso do dia
 (`localStorage.setItem` da chave `done_*`) falha — seja porque lança exceção,
 seja porque uma releitura imediata não bate com o que foi gravado (setItem
-que "funciona" sem persistir, ex: modo privado no Safari/mobile). Isso foi
-adicionado depois que um teste manual reproduziu uma vez um caso em que o
-app logava "exercício concluído" mas a marcação não persistia nem aparecia na
-UI, sem erro nenhum no console — o `catch{}` de `saveDone` engolia a falha em
-silêncio. O log `[sessao] ALERTA: saveDone falhou` (ou `nao persistiu`) é a
-evidência a procurar se o destaque travar de novo: se aparecer, confirma essa
-hipótese de causa; se não aparecer, a causa é outra.
+que "funciona" sem persistir, ex: modo privado no Safari/mobile). Essa
+hipótese foi investigada e descartada como causa do bug acima (o usuário
+reproduziu sem esse ALERTA aparecer), mas o log continua útil como
+diagnóstico geral de falha de persistência local.
 
 ## Comandos
 Para visualizar mudanças localmente: abrir `index.html` no navegador (ou usar a
