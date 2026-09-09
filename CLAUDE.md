@@ -67,6 +67,17 @@ historico["A"]["Supino inclinado com halteres"]   // [{data:'YYYY-MM-DD', carga}
 - `localStorage`: `cargas_saved` e `historico_saved`
 - Firebase: `/users/{uid}/cargas` e `/users/{uid}/historico`
 
+`loadFromFirebase()` (resync, dispara de novo quando o Firebase Auth refaz o
+`onAuthStateChanged` — ex: token expirando, app voltando do background) só
+aceita o snapshot da nuvem para `cargas`/`historico` se nenhuma gravação local
+(`saveCargas`/`saveHistorico`) aconteceu depois que essa consulta começou
+(`cargasLocalTs`/`historicoLocalTs` vs. `loadStartedAt`). Sem essa checagem, um
+resync que dispara logo depois de o usuário salvar um peso pode ler a nuvem
+antes dessa gravação propagar e apagar o valor recém-digitado, revertendo o
+campo pra vazio. Ao mexer em `loadFromFirebase`/`saveCargas`/`saveHistorico`,
+manter essa comparação de timestamp — não voltar a sobrescrever `cargas`/
+`historico` incondicionalmente.
+
 Resumo de sessão de treino vindo do Garmin/Strava (duração, FC, calorias), plano por
 **data** (não por treino — só existe um treino por dia no ciclo atual):
 ```js
@@ -216,6 +227,15 @@ Isso existe por causa de um bug relatado em campo (destaque da sessão guiada
 app) que não foi possível reproduzir em desktop — se acontecer de novo, pedir
 pro usuário abrir o console remoto (`chrome://inspect` via USB, ou o próprio
 console do navegador) e filtrar por `[sessao]` pra ver a evidência exata.
+
+Quando esse ALERTA acontece, `updateSessionHighlight` não fica só no log:
+reconstrói o painel (`rebuildPanel`) a partir do estado real (`treinos`/`done`)
+e tenta destacar de novo uma única vez (guarda em `recoveringHighlight` evita
+loop se o desalinhamento persistir). Isso evita que a sessão fique parada até
+o usuário recarregar a página manualmente, mas é uma recuperação do sintoma —
+a causa raiz do desalinhamento entre o painel e `treinos`/`done` continua sem
+confirmação; a linha `[sessao] reconstruindo painel para recuperar destaque`
+no console é a pista de que isso ocorreu.
 
 ## Comandos
 Para visualizar mudanças localmente: abrir `index.html` no navegador (ou usar a
