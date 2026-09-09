@@ -384,7 +384,24 @@ let editMode=false, currentTab='A';
 // ── DONE STATE ────────────────────────────────────────────────────────
 function getDoneKey(t){return `done_${t}_${new Date().toDateString()}`;}
 function loadDone(t){try{return JSON.parse(localStorage.getItem(getDoneKey(t)))||[];}catch{return[];}}
-function saveDone(t,a){try{localStorage.setItem(getDoneKey(t),JSON.stringify(a));}catch{}}
+// Bug de campo (2026-09-09): um clique no check-circle as vezes logava
+// "exercicio concluido" mas a marcacao sumia — reproduzido 1x em teste manual
+// com o localStorage.setItem falhando silenciosamente (o catch{} vazio de
+// antes engolia o erro sem deixar rastro). Agora loga via logSessao quando o
+// write falha OU quando uma releitura imediata nao bate com o que foi
+// gravado (setItem que "funciona" mas nao persiste, ex: modo privado no
+// Safari/mobile) — nao corrige a causa (fora do controle do app), mas deixa
+// de ser silencioso, permitindo confirmar se e essa a causa na proxima vez
+// que o usuario reportar o destaque travado.
+function saveDone(t,a){
+  const k=getDoneKey(t),json=JSON.stringify(a);
+  try{
+    localStorage.setItem(k,json);
+    if(localStorage.getItem(k)!==json)logSessao('ALERTA: saveDone nao persistiu (releitura nao bate)',{t,a});
+  }catch(err){
+    logSessao('ALERTA: saveDone falhou (localStorage.setItem lancou excecao)',{t,a,err:String(err)});
+  }
+}
 
 // ── SESSAO GUIADA ─────────────────────────────────────────────────────
 function getSessionKey(t){return `session_${t}_${new Date().toDateString()}`;}
