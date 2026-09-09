@@ -198,6 +198,11 @@ header h1{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2p
     <button class="hdr-btn" id="edit-toggle" onclick="toggleEditMode()">✏️ Editar</button>
     <button class="hdr-btn" id="historico-toggle" onclick="openHistorico()">📊 Histórico</button>
     <button class="hdr-btn" id="strava-btn" onclick="handleStrava()">🔗 Strava</button>
+    <!-- TEMPORARIO (remover apos uso, nao documentar no CLAUDE.md): botao de
+    debug pra exportar o `treinos` atual como JSON, usado uma vez pra recuperar
+    edicoes feitas via UI (renomeacoes) sem o usuario ter que digitar tudo de
+    novo no chat. -->
+    <button class="hdr-btn" id="export-debug-btn" onclick="exportTreinosDebug()">📋 Copiar treinos</button>
   </div>
 </header>
 <div id="edit-banner">
@@ -701,6 +706,20 @@ document.addEventListener('click',(e)=>{
   const menu=document.getElementById('hdr-menu'),btn=document.getElementById('menu-toggle');
   if(menu&&menu.classList.contains('show')&&!menu.contains(e.target)&&e.target!==btn)menu.classList.remove('show');
 });
+
+// TEMPORARIO — ver comentario no botao no HTML. Remover essa funcao e o
+// botao junto quando nao precisar mais.
+function exportTreinosDebug(){
+  document.getElementById('hdr-menu').classList.remove('show');
+  const json=JSON.stringify(treinos,null,2);
+  const btn=document.getElementById('export-debug-btn');
+  const done=()=>{const p=btn.textContent;btn.textContent='✅ Copiado!';setTimeout(()=>{btn.textContent=p;},2000);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(json).then(done).catch(()=>{window.prompt('Copie o texto abaixo:',json);});
+  }else{
+    window.prompt('Copie o texto abaixo:',json);
+  }
+}
 
 // ── HISTÓRICO ─────────────────────────────────────────────────────────
 let histPeriodoDias=30,histTabAtiva='evolucao';
