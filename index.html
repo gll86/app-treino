@@ -238,8 +238,36 @@ function saveToStorage(){localStorage.setItem(STORAGE_KEY,JSON.stringify(treinos
 function loadCargas(){try{return JSON.parse(localStorage.getItem(CARGAS_KEY))||{};}catch{return{};}}
 function loadHistorico(){try{return JSON.parse(localStorage.getItem(HIST_KEY))||{};}catch{return{};}}
 let cargasLocalTs=0,historicoLocalTs=0;
-function saveCargas(){cargasLocalTs=Date.now();localStorage.setItem(CARGAS_KEY,JSON.stringify(cargas));if(currentUser)db.ref(`users/${currentUser.uid}/cargas`).set(cargas);}
-function saveHistorico(){historicoLocalTs=Date.now();localStorage.setItem(HIST_KEY,JSON.stringify(historico));if(currentUser)db.ref(`users/${currentUser.uid}/historico`).set(historico);}
+// Causa raiz confirmada em campo (2026-09-09): nomes de exercicio com "/"
+// (ex: "Crucifixo inclinado (halteres/cabo)") quebram o Firebase Realtime
+// Database, que proibe os caracteres . # $ [ ] / em chaves — o SDK lanca uma
+// excecao SINCRONA em db.ref(...).set(...) quando o objeto tem uma chave
+// invalida em qualquer nivel (cargas/historico sao indexados pelo nome do
+// exercicio). Isso acontecia dentro de quickCompleteEx (via logHistorico ->
+// saveHistorico), DEPOIS do saveDone (por isso o progresso persistia
+// corretamente, so nao refletia na tela ate dar refresh) mas ANTES de
+// updateProgressUI/updateSessionHighlight rodarem — interrompendo a funcao
+// no meio e deixando contador e destaque "travados" sem nenhum erro visivel
+// (sintoma so reproduzia com carga preenchida porque logHistorico so chama
+// saveHistorico nesse caso). O try/catch abaixo evita que uma falha no sync
+// com o Firebase (essa ou qualquer outra) interrompa o restante do fluxo
+// sincrono que depende dessas funcoes.
+function saveCargas(){
+  cargasLocalTs=Date.now();
+  localStorage.setItem(CARGAS_KEY,JSON.stringify(cargas));
+  if(currentUser){
+    try{db.ref(`users/${currentUser.uid}/cargas`).set(cargas);}
+    catch(err){logSessao('ALERTA: sync de cargas com o Firebase falhou (dado local ok)',{err:String(err)});}
+  }
+}
+function saveHistorico(){
+  historicoLocalTs=Date.now();
+  localStorage.setItem(HIST_KEY,JSON.stringify(historico));
+  if(currentUser){
+    try{db.ref(`users/${currentUser.uid}/historico`).set(historico);}
+    catch(err){logSessao('ALERTA: sync de historico com o Firebase falhou (dado local ok)',{err:String(err)});}
+  }
+}
 function updateCarga(key,gi,ei,val){
   const nome=treinos[key].grupos[gi].exercicios[ei].nome;
   const num=val===''?NaN:parseFloat(String(val).replace(',','.'));
@@ -330,10 +358,21 @@ function saveToCloud(){
   if(!currentUser)return;
   const btn=document.getElementById('auth-btn');const prev=btn?btn.textContent:'';
   if(btn)btn.textContent='⏳';
-  db.ref(`users/${currentUser.uid}/treinos`).set(treinos)
-    .then(()=>db.ref(`users/${currentUser.uid}/treinosVersion`).set(TREINOS_VERSION))
-    .then(()=>{if(btn)btn.textContent=prev;})
-    .catch(()=>{if(btn)btn.textContent='⚠ sync';});
+  // db.ref(...).set() pode lancar SINCRONAMENTE (nao so rejeitar a promise)
+  // se `treinos` tiver uma chave invalida pro Firebase em qualquer nivel —
+  // ex: nome de exercicio/grupo editado pelo usuario contendo "/" (mesma
+  // causa raiz documentada em saveCargas/saveHistorico acima). Sem o
+  // try/catch, isso interromperia quem chamou saveToCloud (toggleEditMode)
+  // antes de terminar de atualizar a UI de edicao.
+  try{
+    db.ref(`users/${currentUser.uid}/treinos`).set(treinos)
+      .then(()=>db.ref(`users/${currentUser.uid}/treinosVersion`).set(TREINOS_VERSION))
+      .then(()=>{if(btn)btn.textContent=prev;})
+      .catch(()=>{if(btn)btn.textContent='⚠ sync';});
+  }catch(err){
+    logSessao('ALERTA: sync de treinos com o Firebase falhou (dado local ok)',{err:String(err)});
+    if(btn)btn.textContent='⚠ sync';
+  }
 }
 
 let firebaseLoadInFlight=false;
